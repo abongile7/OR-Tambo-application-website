@@ -9,366 +9,123 @@
       --sidebar: #313a44;
       --sidebar-border: #4a5360;
       --sidebar-text: #d8dee6;
-      --sidebar-muted: #9ea7b4;
       --sidebar-active: #147ff0;
       --bg: #eef1f6;
-      --panel: #ffffff;
+      --panel: #fff;
       --border: #dfe3e8;
       --text: #1f2937;
       --muted: #6b7280;
       --success: #12b76a;
-      --danger: #b42318;
       --warning: #f59e0b;
+      --danger: #b42318;
     }
-
     * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    .layout {
-      min-height: 100vh;
-      display: flex;
-    }
-
-    .sidebar {
-      width: 330px;
-      background: var(--sidebar);
-      color: var(--sidebar-text);
-      border-right: 1px solid #27303a;
-      overflow-y: auto;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--sidebar-border);
-      font-size: 42px;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .search {
-      padding: 14px;
-      border-bottom: 1px solid var(--sidebar-border);
-    }
-
-    .search input {
-      width: 100%;
-      border: 1px solid #526170;
-      background: #3e4a57;
-      color: #fff;
-      border-radius: 5px;
-      padding: 10px 12px;
-      font-size: 16px;
-    }
-
-    .menu {
-      padding: 10px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .menu-item,
-    .submenu-item {
-      width: 100%;
-      border: 0;
-      border-radius: 6px;
-      cursor: pointer;
-      text-align: left;
-      color: var(--sidebar-text);
-      background: transparent;
-      padding: 11px 12px;
-      font-size: 18px;
-      transition: background .15s ease;
-    }
-
-    .menu-item:hover,
-    .submenu-item:hover { background: #3a4552; }
-
-    .menu-item.active,
-    .submenu-item.active {
-      background: var(--sidebar-active);
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .menu-item .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .menu-item .left,
-    .submenu-item .left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .menu-group {
-      background: #2e3742;
-      border-radius: 8px;
-      border: 1px solid #3e4956;
-      overflow: hidden;
-    }
-
-    .submenu {
-      display: none;
-      padding: 6px;
-      background: #2a333d;
-      border-top: 1px solid #404b58;
-      gap: 6px;
-    }
-
+    body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--text); }
+    .layout { min-height: 100vh; display: flex; }
+    .sidebar { width: 330px; background: var(--sidebar); color: var(--sidebar-text); border-right: 1px solid #27303a; overflow-y: auto; }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--sidebar-border); font-size: 42px; font-weight: 600; color: #fff; }
+    .search { padding: 14px; border-bottom: 1px solid var(--sidebar-border); }
+    .search input { width: 100%; border: 1px solid #526170; background: #3e4a57; color: #fff; border-radius: 5px; padding: 10px 12px; font-size: 16px; }
+    .menu { padding: 10px; display: grid; gap: 8px; }
+    .menu-item, .submenu-item { width: 100%; border: 0; border-radius: 6px; cursor: pointer; text-align: left; color: var(--sidebar-text); background: transparent; padding: 11px 12px; font-size: 18px; }
+    .menu-item:hover, .submenu-item:hover { background: #3a4552; }
+    .menu-item.active, .submenu-item.active { background: var(--sidebar-active); color: #fff; font-weight: 600; }
+    .menu-item .row, .menu-item .left, .submenu-item .left { display: flex; align-items: center; gap: 10px; }
+    .menu-item .row { justify-content: space-between; }
+    .menu-group { background: #2e3742; border-radius: 8px; border: 1px solid #3e4956; overflow: hidden; }
+    .submenu { display: none; padding: 6px; background: #2a333d; border-top: 1px solid #404b58; gap: 6px; }
     .menu-group.open .submenu { display: grid; }
 
-    .content {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .topbar {
-      height: 72px;
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 26px;
-    }
-
-    .badge {
-      display: inline-block;
-      border-radius: 4px;
-      padding: 2px 8px;
-      background: #16a34a;
-      color: #fff;
-      font-size: 12px;
-      margin-right: 6px;
-      font-weight: 600;
-    }
-
+    .content { flex: 1; min-width: 0; }
+    .topbar { height: 72px; background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 26px; }
+    .badge { display: inline-block; border-radius: 4px; padding: 2px 8px; background: #16a34a; color: #fff; font-size: 12px; margin-right: 6px; font-weight: 600; }
     .page { padding: 24px; }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(17, 24, 39, 0.05);
-      overflow: hidden;
-    }
-
-    .page-header {
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      background: #f9fbfd;
-    }
-
-    .page-title {
-      margin: 0;
-      font-size: 36px;
-      font-weight: 500;
-    }
-
-    .page-description {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 8px rgba(17, 24, 39, .05); overflow: hidden; }
+    .page-header { padding: 20px; border-bottom: 1px solid var(--border); background: #f9fbfd; }
+    .page-title { margin: 0; font-size: 36px; font-weight: 500; }
+    .page-description { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
 
     .section { display: none; }
     .section.active { display: block; }
-
     .section-body { padding: 20px; }
+    .panel { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 14px; }
 
-    .panel {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 14px;
-      background: #fff;
-    }
-
-    .panel h3 { margin-top: 0; margin-bottom: 12px; }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      border-bottom: 1px solid var(--border);
-      background: #f6f8fb;
-    }
-
-    .tab-btn {
-      border: 0;
-      background: transparent;
-      padding: 12px 14px;
-      cursor: pointer;
-      font-size: 15px;
-      border-bottom: 3px solid transparent;
-    }
-
-    .tab-btn.active {
-      background: #fff;
-      border-bottom-color: #0f7df2;
-      color: #0f7df2;
-      font-weight: 600;
-    }
-
+    .tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border); background: #f6f8fb; }
+    .tab-btn { border: 0; background: transparent; padding: 12px 14px; cursor: pointer; font-size: 15px; border-bottom: 3px solid transparent; }
+    .tab-btn.active { background: #fff; border-bottom-color: #0f7df2; color: #0f7df2; font-weight: 600; }
     .tab-panel { display: none; padding: 16px; }
     .tab-panel.active { display: block; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .field label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .field input,
-    .field textarea,
-    .field select {
-      width: 100%;
-      border: 1px solid #ccd3dc;
-      border-radius: 6px;
-      padding: 10px 11px;
-      font-size: 15px;
-      font-family: inherit;
-    }
-
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .field label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+    .field input, .field textarea, .field select { width: 100%; border: 1px solid #ccd3dc; border-radius: 6px; padding: 10px 11px; font-size: 15px; font-family: inherit; }
     .field textarea { min-height: 100px; resize: vertical; }
     .full { grid-column: 1 / -1; }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 6px;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .btn { border: 0; border-radius: 6px; padding: 10px 14px; cursor: pointer; font-size: 14px; }
     .btn-primary { background: #0f7df2; color: #fff; }
     .btn-secondary { background: #e5e7eb; color: #111827; }
     .btn-success { background: var(--success); color: #fff; }
 
-    .status {
-      margin-top: 12px;
-      border-radius: 6px;
-      padding: 10px 12px;
-      font-size: 14px;
-      display: none;
-    }
-
+    .status { margin-top: 12px; border-radius: 6px; padding: 10px 12px; font-size: 14px; display: none; }
     .status.show { display: block; }
     .status.success { background: #ecfdf3; color: #065f46; border: 1px solid #a7f3d0; }
     .status.warning { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
     .status.error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
-    .helper {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 13px;
-    }
+    .helper { margin-top: 8px; color: var(--muted); font-size: 13px; }
+    .method-switch { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+    .method-card { border: 1px solid #cdd5df; border-radius: 8px; padding: 12px; cursor: pointer; background: #fff; }
+    .method-card.active { border-color: #0f7df2; box-shadow: inset 0 0 0 1px #0f7df2; background: #f8fbff; }
+    .method-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .method-desc { color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .hidden { display: none; }
+    .extract-preview { border: 1px dashed #b8c2cf; background: #fbfdff; border-radius: 8px; padding: 12px; margin-top: 10px; }
+    .extract-preview h4 { margin: 0 0 8px; }
+    .extract-list { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 
     table { width: 100%; border-collapse: collapse; }
-    th, td {
-      text-align: left;
-      padding: 10px;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-    }
-
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); font-size: 14px; }
     th { background: #f8fafc; }
-
-    .pill {
-      display: inline-block;
-      background: #fef3c7;
-      color: #92400e;
-      border-radius: 999px;
-      padding: 2px 9px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    ul.clean {
-      margin: 0;
-      padding-left: 18px;
-      display: grid;
-      gap: 8px;
-      line-height: 1.45;
-    }
+    .pill { display: inline-block; background: #fef3c7; color: #92400e; border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 600; }
+    ul.clean { margin: 0; padding-left: 18px; display: grid; gap: 8px; line-height: 1.45; }
 
     @media (max-width: 1000px) {
       .layout { flex-direction: column; }
       .sidebar { width: 100%; }
-      .grid { grid-template-columns: 1fr; }
+      .grid, .method-switch { grid-template-columns: 1fr; }
       .page-title { font-size: 30px; }
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
 </head>
 <body>
   <div class="layout">
     <aside class="sidebar">
       <div class="brand">🛡️ OR Tambo</div>
       <div class="search"><input placeholder="search" aria-label="Search menu" /></div>
-
       <nav class="menu" aria-label="Portal left navigation">
-        <button class="menu-item nav-link" data-section="dashboard">
-          <span class="left">🏠 Dashboard</span>
-        </button>
-
+        <button class="menu-item nav-link" data-section="dashboard"><span class="left">🏠 Dashboard</span></button>
         <div class="menu-group" data-group="administration">
-          <button class="menu-item" data-toggle-group="administration">
-            <span class="row"><span class="left">⚙️ Administration</span><span>▾</span></span>
-          </button>
+          <button class="menu-item" data-toggle-group="administration"><span class="row"><span class="left">⚙️ Administration</span><span>▾</span></span></button>
           <div class="submenu">
-            <button class="submenu-item nav-link" data-section="personal">
-              <span class="left">👤 Manage My Profile</span>
-            </button>
-            <button class="submenu-item nav-link" data-section="documents">
-              <span class="left">📄 My CV</span>
-            </button>
-            <button class="submenu-item nav-link active" data-section="applications">
-              <span class="left">🗂️ My Applications</span>
-            </button>
+            <button class="submenu-item nav-link" data-section="personal"><span class="left">👤 Manage My Profile</span></button>
+            <button class="submenu-item nav-link" data-section="documents"><span class="left">📄 My CV</span></button>
+            <button class="submenu-item nav-link active" data-section="applications"><span class="left">🗂️ My Applications</span></button>
           </div>
         </div>
-
         <div class="menu-group" data-group="vacancies">
-          <button class="menu-item" data-toggle-group="vacancies">
-            <span class="row"><span class="left">💼 Vacancies</span><span>▾</span></span>
-          </button>
+          <button class="menu-item" data-toggle-group="vacancies"><span class="row"><span class="left">💼 Vacancies</span><span>▾</span></span></button>
           <div class="submenu">
             <button class="submenu-item nav-link" data-section="vacancies-current"><span class="left">○ Current Vacancies</span></button>
             <button class="submenu-item nav-link" data-section="vacancies-archived"><span class="left">○ Archived Vacancies</span></button>
             <button class="submenu-item nav-link" data-section="how-to-apply"><span class="left">○ How to Apply</span></button>
           </div>
         </div>
-
         <div class="menu-group" data-group="help">
-          <button class="menu-item" data-toggle-group="help">
-            <span class="row"><span class="left">ℹ️ Help Center</span><span>▾</span></span>
-          </button>
+          <button class="menu-item" data-toggle-group="help"><span class="row"><span class="left">ℹ️ Help Center</span><span>▾</span></span></button>
           <div class="submenu">
             <button class="submenu-item nav-link" data-section="help-faq"><span class="left">○ Frequently Asked Questions</span></button>
             <button class="submenu-item nav-link" data-section="help-videos"><span class="left">○ Video Tutorials</span></button>
@@ -443,58 +200,64 @@
             </section>
 
             <section class="tab-panel" id="tab-documents-tab">
-              <div class="grid">
-                <div class="field full">
-                  <label for="cvUpload">Upload CV (TXT, PDF, DOC, DOCX)</label>
-                  <input id="cvUpload" type="file" accept=".txt,.pdf,.doc,.docx" />
-                  <div class="helper">In this demo: TXT files auto-parse immediately. PDF/DOC/DOCX upload is simulated, then use pasted text for autofill.</div>
+              <div class="method-switch">
+                <div class="method-card active" data-mode="upload">
+                  <div class="method-title">Upload CV & Auto-Extract</div>
+                  <div class="method-desc">Upload your CV, extract details into fields, review, then submit.</div>
                 </div>
-                <div class="field full">
-                  <label for="cvText">CV text for auto-fill</label>
-                  <textarea id="cvText" placeholder="Paste CV text here if your file is PDF/DOC/DOCX..."></textarea>
+                <div class="method-card" data-mode="manual">
+                  <div class="method-title">Manual Entry</div>
+                  <div class="method-desc">Type details manually and upload CV as supporting document.</div>
                 </div>
               </div>
+
+              <div id="uploadArea" class="panel">
+                <div class="field full">
+                  <label for="cvUpload">Upload CV (TXT, PDF, DOCX)</label>
+                  <input id="cvUpload" type="file" accept=".txt,.pdf,.docx,.doc" />
+                  <div class="helper">This demo extracts data from TXT, PDF and DOCX. DOC is upload-only.</div>
+                </div>
+                <div class="actions"><button class="btn btn-secondary" id="extractBtn">Extract Details from CV</button></div>
+                <div class="extract-preview hidden" id="extractPreview">
+                  <h4>Extracted Details</h4>
+                  <ul class="extract-list" id="extractList"></ul>
+                </div>
+              </div>
+
+              <div class="panel">
+                <h3 style="margin-top:0;">Applicant details (editable before submit)</h3>
+                <div class="grid">
+                  <div class="field"><label for="docFirstName">First Name</label><input id="docFirstName" /></div>
+                  <div class="field"><label for="docLastName">Last Name</label><input id="docLastName" /></div>
+                  <div class="field"><label for="docEmail">Email</label><input id="docEmail" type="email" /></div>
+                  <div class="field"><label for="docPhone">Phone</label><input id="docPhone" /></div>
+                  <div class="field"><label for="docId">ID Number</label><input id="docId" /></div>
+                  <div class="field"><label for="docCitizenship">Citizenship</label><input id="docCitizenship" value="South African" /></div>
+                  <div class="field full"><label for="docAddress">Address</label><textarea id="docAddress"></textarea></div>
+                </div>
+              </div>
+
+              <div class="field full" id="cvTextWrap">
+                <label for="cvText">Manual CV text input (fallback)</label>
+                <textarea id="cvText" placeholder="If file extraction misses some details, paste CV text and click Extract Details."></textarea>
+              </div>
+
               <div class="actions">
-                <button class="btn btn-success" id="autoFillBtn">Auto-fill Personal Details</button>
-                <button class="btn btn-secondary" id="simulateUploadBtn">Save Documents</button>
+                <button class="btn btn-success" id="submitApplicationBtn">Submit Application</button>
+                <button class="btn btn-primary" id="syncToProfileBtn">Save to Personal Details Tab</button>
               </div>
               <div class="status" id="statusMsg"></div>
             </section>
           </section>
 
-          <section class="section" id="section-dashboard">
-            <div class="section-body">
-              <div class="panel"><h3>Welcome to your dashboard</h3><p>This demo keeps the OR Tambo look while improving consistency: left menu now works, sections are stable, and forms are easier to complete.</p></div>
-            </div>
-          </section>
-
-          <section class="section" id="section-personal">
-            <div class="section-body">
-              <div class="panel"><h3>Manage My Profile</h3><p>Profile section linked from left sidebar now opens correctly. Use My Applications > Personal Details to edit the full application form.</p></div>
-            </div>
-          </section>
-
-          <section class="section" id="section-documents">
-            <div class="section-body">
-              <div class="panel"><h3>My CV</h3><p>This links directly to the improved CV tab inside My Applications with auto-fill support.</p><div class="actions"><button class="btn btn-primary jump-to-documents">Open CV Upload Form</button></div></div>
-            </div>
-          </section>
-
-          <section class="section" id="section-vacancies-current">
-            <div class="section-body"><div class="panel"><h3>Current Vacancies</h3><p>Demo listing area for current opportunities.</p></div></div>
-          </section>
-          <section class="section" id="section-vacancies-archived">
-            <div class="section-body"><div class="panel"><h3>Archived Vacancies</h3><p>Demo listing area for archived opportunities.</p></div></div>
-          </section>
-          <section class="section" id="section-how-to-apply">
-            <div class="section-body"><div class="panel"><h3>How to Apply</h3><ul class="clean"><li>Create/update profile details.</li><li>Upload supporting documents and CV.</li><li>Review each application before submission.</li></ul></div></div>
-          </section>
-          <section class="section" id="section-help-faq">
-            <div class="section-body"><div class="panel"><h3>Frequently Asked Questions</h3><p>Help center section now stays on-page and no longer jumps unexpectedly.</p></div></div>
-          </section>
-          <section class="section" id="section-help-videos">
-            <div class="section-body"><div class="panel"><h3>Video Tutorials</h3><p>Placeholder for video tutorials in this demo version.</p></div></div>
-          </section>
+          <section class="section" id="section-dashboard"><div class="section-body"><div class="panel"><h3>Welcome to your dashboard</h3><p>This demo keeps the OR Tambo look while improving consistency: left menu works, sections are stable, and CV flow supports manual and extraction options.</p></div></div></section>
+          <section class="section" id="section-personal"><div class="section-body"><div class="panel"><h3>Manage My Profile</h3><p>Profile section linked from the left sidebar now opens correctly.</p></div></div></section>
+          <section class="section" id="section-documents"><div class="section-body"><div class="panel"><h3>My CV</h3><p>Use upload extraction or manual entry, then submit.</p><div class="actions"><button class="btn btn-primary jump-to-documents">Open CV Workflow</button></div></div></div></section>
+          <section class="section" id="section-vacancies-current"><div class="section-body"><div class="panel"><h3>Current Vacancies</h3><p>Demo listing area for current opportunities.</p></div></div></section>
+          <section class="section" id="section-vacancies-archived"><div class="section-body"><div class="panel"><h3>Archived Vacancies</h3><p>Demo listing area for archived opportunities.</p></div></div></section>
+          <section class="section" id="section-how-to-apply"><div class="section-body"><div class="panel"><h3>How to Apply</h3><ul class="clean"><li>Choose manual or CV extraction mode.</li><li>Review extracted details and edit as needed.</li><li>Submit your application with supporting CV.</li></ul></div></div></section>
+          <section class="section" id="section-help-faq"><div class="section-body"><div class="panel"><h3>Frequently Asked Questions</h3><p>Help center section now stays on-page and no longer jumps unexpectedly.</p></div></div></section>
+          <section class="section" id="section-help-videos"><div class="section-body"><div class="panel"><h3>Video Tutorials</h3><p>Placeholder for video tutorials in this demo version.</p></div></div></section>
         </article>
       </div>
     </main>
@@ -502,10 +265,10 @@
 
   <script>
     const sectionsMeta = {
-      applications: { title: 'My Applications', description: 'Improved, stable and user-friendly tab flow for applications.' },
+      applications: { title: 'My Applications', description: 'Stable multi-step application flow with CV extraction and manual edit support.' },
       dashboard: { title: 'Dashboard', description: 'Applicant dashboard summary for quick access.' },
       personal: { title: 'Manage My Profile', description: 'Update and maintain your profile information.' },
-      documents: { title: 'My CV', description: 'Upload CV and auto-fill personal information from CV text.' },
+      documents: { title: 'My CV', description: 'Upload CV, extract details, review manually, then submit.' },
       'vacancies-current': { title: 'Current Vacancies', description: 'Browse vacancies currently open for applications.' },
       'vacancies-archived': { title: 'Archived Vacancies', description: 'View closed and archived vacancy posts.' },
       'how-to-apply': { title: 'How to Apply', description: 'Step-by-step application guidance.' },
@@ -521,7 +284,6 @@
     function openSection(sectionKey) {
       navLinks.forEach((link) => link.classList.toggle('active', link.dataset.section === sectionKey));
       sections.forEach((section) => section.classList.toggle('active', section.id === `section-${sectionKey}`));
-
       const meta = sectionsMeta[sectionKey] || sectionsMeta.applications;
       pageTitle.textContent = meta.title;
       pageDescription.textContent = meta.description;
@@ -531,10 +293,9 @@
       link.addEventListener('click', () => {
         const sectionKey = link.dataset.section;
         openSection(sectionKey);
-
         if (sectionKey === 'documents') {
-          activateTab('documents-tab');
           openSection('applications');
+          activateTab('documents-tab');
         }
       });
     });
@@ -545,22 +306,17 @@
         document.querySelector(`.menu-group[data-group="${group}"]`).classList.toggle('open');
       });
     });
-
     document.querySelector('.menu-group[data-group="administration"]').classList.add('open');
     document.querySelector('.menu-group[data-group="vacancies"]').classList.add('open');
     document.querySelector('.menu-group[data-group="help"]').classList.add('open');
 
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabPanels = document.querySelectorAll('.tab-panel');
-
     function activateTab(tabKey) {
       tabButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === tabKey));
       tabPanels.forEach((panel) => panel.classList.toggle('active', panel.id === `tab-${tabKey}`));
     }
-
-    tabButtons.forEach((btn) => {
-      btn.addEventListener('click', () => activateTab(btn.dataset.tab));
-    });
+    tabButtons.forEach((btn) => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
 
     document.querySelectorAll('.jump-to-documents').forEach((button) => {
       button.addEventListener('click', () => {
@@ -577,67 +333,166 @@
       showStatus.timer = setTimeout(() => statusMsg.className = 'status', 4500);
     }
 
-    function autoFillFromText(text) {
-      const emailMatch = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-      const phoneMatch = text.match(/(?:\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}/);
+    const modeCards = document.querySelectorAll('.method-card');
+    const uploadArea = document.getElementById('uploadArea');
+    let currentMode = 'upload';
+    modeCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        currentMode = card.dataset.mode;
+        modeCards.forEach((c) => c.classList.toggle('active', c === card));
+        uploadArea.classList.toggle('hidden', currentMode === 'manual');
+      });
+    });
+
+    const profileFields = ['firstName', 'lastName', 'email', 'phone', 'idNumber', 'citizenship', 'address'];
+    const docFields = ['docFirstName', 'docLastName', 'docEmail', 'docPhone', 'docId', 'docCitizenship', 'docAddress'];
+
+    function syncDocToProfile() {
+      profileFields.forEach((field, idx) => {
+        document.getElementById(field).value = document.getElementById(docFields[idx]).value;
+      });
+    }
+
+    function syncProfileToDoc() {
+      profileFields.forEach((field, idx) => {
+        document.getElementById(docFields[idx]).value = document.getElementById(field).value;
+      });
+    }
+    syncProfileToDoc();
+
+    function extractDetailsFromText(text) {
+      const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+      const email = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || '';
+      const phone = text.match(/(?:\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}|\+?\d[\d\s-]{8,}/)?.[0] || '';
+      const idNumber = text.match(/\b\d{13}\b/)?.[0] || '';
+
+      let firstName = '';
+      let lastName = '';
       const nameTagged = text.match(/(?:name|full\s*name)\s*[:\-]\s*([A-Za-z'-]+)\s+([A-Za-z'-]+)/i);
-
       if (nameTagged) {
-        document.getElementById('firstName').value = nameTagged[1];
-        document.getElementById('lastName').value = nameTagged[2];
+        firstName = nameTagged[1];
+        lastName = nameTagged[2];
+      } else if (lines.length) {
+        const firstLineName = lines[0].match(/^([A-Za-z'-]+)\s+([A-Za-z'-]+)$/);
+        if (firstLineName) {
+          firstName = firstLineName[1];
+          lastName = firstLineName[2];
+        }
       }
-      if (emailMatch) document.getElementById('email').value = emailMatch[0];
-      if (phoneMatch) document.getElementById('phone').value = phoneMatch[0].replace(/\s+/g, ' ');
 
-      const hits = [nameTagged, emailMatch, phoneMatch].filter(Boolean).length;
-      if (!hits) {
-        showStatus('No name/email/phone found yet. Edit text format and try again.', 'warning');
+      const addressLine = lines.find((line) => /address|street|avenue|road|rd|town|city/i.test(line)) || '';
+      return { firstName, lastName, email, phone, idNumber, address: addressLine, citizenship: 'South African' };
+    }
+
+    function applyExtractedDetails(details) {
+      document.getElementById('docFirstName').value = details.firstName || '';
+      document.getElementById('docLastName').value = details.lastName || '';
+      document.getElementById('docEmail').value = details.email || '';
+      document.getElementById('docPhone').value = details.phone || '';
+      document.getElementById('docId').value = details.idNumber || '';
+      document.getElementById('docAddress').value = details.address || '';
+      if (details.citizenship) document.getElementById('docCitizenship').value = details.citizenship;
+
+      const preview = document.getElementById('extractPreview');
+      const list = document.getElementById('extractList');
+      list.innerHTML = '';
+      Object.entries(details).forEach(([key, value]) => {
+        if (!value) return;
+        const item = document.createElement('li');
+        item.textContent = `${key}: ${value}`;
+        list.appendChild(item);
+      });
+      preview.classList.remove('hidden');
+
+      if (!list.children.length) {
+        showStatus('No details extracted yet. You can fill the form manually.', 'warning');
       } else {
-        openSection('applications');
-        activateTab('personal-form');
-        showStatus('Personal details auto-filled from CV data. Please review and save.', 'success');
+        showStatus('Details extracted. Review/edit the fields, then submit.', 'success');
       }
     }
 
-    document.getElementById('cvUpload').addEventListener('change', async (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
+    async function extractTextFromPdf(file) {
+      if (!window.pdfjsLib) throw new Error('PDF parser unavailable');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const bytes = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+      let text = '';
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+        const page = await pdf.getPage(pageNumber);
+        const content = await page.getTextContent();
+        text += content.items.map((item) => item.str).join(' ') + '\n';
+      }
+      return text;
+    }
 
-      const isText = file.type.startsWith('text/') || file.name.toLowerCase().endsWith('.txt');
-      if (!isText) {
-        showStatus(`"${file.name}" uploaded for demo. For auto-fill, paste CV text below and click Auto-fill.`, 'warning');
+    async function extractTextFromDocx(file) {
+      if (!window.mammoth) throw new Error('DOCX parser unavailable');
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      return result.value;
+    }
+
+    async function getCvText(file) {
+      const extension = file.name.split('.').pop().toLowerCase();
+      if (extension === 'txt') return file.text();
+      if (extension === 'pdf') return extractTextFromPdf(file);
+      if (extension === 'docx') return extractTextFromDocx(file);
+      if (extension === 'doc') throw new Error('DOC format cannot be parsed in browser demo. Use manual fields.');
+      throw new Error('Unsupported file type. Upload TXT, PDF or DOCX.');
+    }
+
+    document.getElementById('extractBtn').addEventListener('click', async () => {
+      const file = document.getElementById('cvUpload').files[0];
+      const fallbackText = document.getElementById('cvText').value.trim();
+
+      if (!file && !fallbackText) {
+        showStatus('Choose a CV file or paste CV text before extracting.', 'warning');
         return;
       }
 
       try {
-        const rawText = await file.text();
-        document.getElementById('cvText').value = rawText;
-        autoFillFromText(rawText);
+        const text = file ? await getCvText(file) : fallbackText;
+        document.getElementById('cvText').value = text;
+        const details = extractDetailsFromText(text);
+        applyExtractedDetails(details);
       } catch (error) {
-        showStatus('Could not read the uploaded file. Paste CV text manually.', 'error');
+        if (fallbackText) {
+          const details = extractDetailsFromText(fallbackText);
+          applyExtractedDetails(details);
+          showStatus(`File extraction issue: ${error.message}. Used pasted text instead.`, 'warning');
+        } else {
+          showStatus(error.message, 'error');
+        }
       }
     });
 
-    document.getElementById('autoFillBtn').addEventListener('click', () => {
-      const text = document.getElementById('cvText').value.trim();
-      if (!text) {
-        showStatus('Paste CV text first, then click Auto-fill.', 'warning');
-        return;
-      }
-      autoFillFromText(text);
-    });
-
-    document.getElementById('simulateUploadBtn').addEventListener('click', () => {
-      const file = document.getElementById('cvUpload').files[0];
-      if (!file) {
-        showStatus('Please choose your CV before saving.', 'warning');
-        return;
-      }
-      showStatus(`CV "${file.name}" saved successfully (demo).`, 'success');
+    document.getElementById('syncToProfileBtn').addEventListener('click', () => {
+      syncDocToProfile();
+      activateTab('personal-form');
+      showStatus('Details copied to Personal Details tab.', 'success');
     });
 
     document.getElementById('savePersonal').addEventListener('click', () => {
+      syncProfileToDoc();
       showStatus('Personal details saved successfully (demo).', 'success');
+    });
+
+    document.getElementById('submitApplicationBtn').addEventListener('click', () => {
+      const required = ['docFirstName', 'docLastName', 'docEmail', 'docPhone'];
+      const missing = required.filter((id) => !document.getElementById(id).value.trim());
+      const uploadedCv = document.getElementById('cvUpload').files[0];
+
+      if (missing.length) {
+        showStatus('Please complete First Name, Last Name, Email and Phone before submitting.', 'warning');
+        return;
+      }
+      if (!uploadedCv) {
+        showStatus('Please upload your CV before submitting the application.', 'warning');
+        return;
+      }
+
+      syncDocToProfile();
+      showStatus(`Application submitted successfully with CV "${uploadedCv.name}" (demo).`, 'success');
     });
   </script>
 </body>
