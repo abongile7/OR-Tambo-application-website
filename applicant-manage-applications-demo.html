@@ -3,106 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OR Tambo | CV Application Demo</title>
+  <title>OR Tambo E-Recruitment Applicant CV</title>
   <style>
     :root {
-      --sidebar: #313a44;
-      --sidebar-border: #4a5360;
-      --sidebar-text: #d8dee6;
-      --sidebar-active: #147ff0;
-      --bg: #eef1f6;
-      --panel: #fff;
-      --border: #dfe3e8;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --success: #12b76a;
-      --warning: #f59e0b;
-      --danger: #b42318;
-      --brand: #0e4d48;
+      --sidebar:#313a44; --sidebar-border:#4a5360; --sidebar-text:#d8dee6; --sidebar-active:#147ff0;
+      --bg:#eef1f6; --panel:#fff; --border:#dfe3e8; --text:#1f2937; --muted:#6b7280;
+      --success:#12b76a; --warning:#f59e0b; --danger:#b42318;
     }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--text)}
+    .layout{min-height:100vh;display:flex}
+    .sidebar{width:310px;background:var(--sidebar);color:var(--sidebar-text);border-right:1px solid #27303a}
+    .brand{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--sidebar-border);font-size:42px;font-weight:600;color:#fff}
+    .search{padding:14px;border-bottom:1px solid var(--sidebar-border)}
+    .search input{width:100%;border:1px solid #526170;background:#3e4a57;color:#fff;border-radius:5px;padding:10px 12px;font-size:16px}
+    .menu{padding:10px;display:grid;gap:8px}
+    .menu-item,.submenu-item{width:100%;border:0;border-radius:6px;text-align:left;background:transparent;color:var(--sidebar-text);padding:11px 12px;font-size:18px}
+    .menu-item.active,.submenu-item.active{background:var(--sidebar-active);color:#fff;font-weight:600}
+    .menu-group{background:#2e3742;border-radius:8px;border:1px solid #3e4956;overflow:hidden}
+    .submenu{display:grid;padding:6px;background:#2a333d;border-top:1px solid #404b58;gap:6px}
 
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--text); }
-    .layout { min-height: 100vh; display: flex; }
+    .content{flex:1;min-width:0}
+    .topbar{height:72px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+    .badge{display:inline-block;border-radius:4px;padding:2px 8px;background:#16a34a;color:#fff;font-size:12px;margin-right:6px;font-weight:600}
+    .page{padding:20px}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    .title-wrap{padding:22px 26px;border-bottom:1px solid var(--border)}
+    .title-wrap h1{margin:0;font-size:48px;font-weight:500}
 
-    .sidebar { width: 300px; background: var(--sidebar); color: var(--sidebar-text); border-right: 1px solid #27303a; }
-    .brand { display: flex; align-items: center; gap: 12px; padding: 18px; border-bottom: 1px solid var(--sidebar-border); font-size: 24px; font-weight: 600; color: #fff; }
-    .search { padding: 14px; border-bottom: 1px solid var(--sidebar-border); }
-    .search input { width: 100%; border: 1px solid #526170; background: #3e4a57; color: #fff; border-radius: 5px; padding: 10px 12px; font-size: 16px; }
-    .menu { padding: 10px; display: grid; gap: 8px; }
-    .menu-item, .submenu-item { width: 100%; border: 0; border-radius: 6px; cursor: pointer; text-align: left; color: var(--sidebar-text); background: transparent; padding: 11px 12px; font-size: 16px; }
-    .menu-item:hover, .submenu-item:hover { background: #3a4552; }
-    .menu-item.active, .submenu-item.active { background: var(--sidebar-active); color: #fff; font-weight: 600; }
-    .menu-item .row, .menu-item .left, .submenu-item .left { display: flex; align-items: center; gap: 10px; }
-    .menu-item .row { justify-content: space-between; }
-    .menu-group { background: #2e3742; border-radius: 8px; border: 1px solid #3e4956; overflow: hidden; }
-    .submenu { display: grid; padding: 6px; background: #2a333d; border-top: 1px solid #404b58; gap: 6px; }
+    .form-wrap{max-width:1180px;margin:0 auto;padding:20px 26px 28px}
+    .section{border-top:1px solid #d8dde4;padding:18px 0}
+    .section:first-child{border-top:0}
+    .section h3{margin:0 0 10px;font-size:28px;font-weight:500}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+    .field label{display:block;margin-bottom:6px;font-weight:600;font-size:16px}
+    .field label .req{color:#ef4444}
+    .field input,.field textarea,.field select{width:100%;border:1px solid #ced6df;border-radius:7px;padding:11px 12px;font-size:15px;font-family:inherit;background:#fff}
+    .field textarea{min-height:96px;resize:vertical}
+    .full{grid-column:1/-1}
 
-    .content { flex: 1; min-width: 0; }
-    .topbar { height: 68px; background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 22px; }
-    .badge { display: inline-block; border-radius: 4px; padding: 2px 8px; background: #16a34a; color: #fff; font-size: 12px; margin-right: 6px; font-weight: 600; }
-    .page { padding: 20px; }
+    .upload-row{display:grid;grid-template-columns:170px 1fr 56px;max-width:760px}
+    .upload-row button,.upload-row .file-name,.upload-row .remove-file{border:1px solid #ced6df;min-height:54px;display:flex;align-items:center;justify-content:center;background:#fff;font-size:15px}
+    .upload-row button{border-radius:8px 0 0 8px;cursor:pointer}
+    .upload-row .file-name{border-left:0;justify-content:flex-start;padding:0 12px;color:#0f7df2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .upload-row .remove-file{border-left:0;border-radius:0 8px 8px 0;cursor:pointer}
+    input[type="file"]{display:none}
 
-    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-    .hero { padding: 24px 28px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-    .hero .logo-title { color: var(--brand); font-size: 52px; margin: 0; line-height: 1; font-weight: 700; font-family: Georgia, 'Times New Roman', serif; }
-    .hero .job-title { margin: 10px 0 8px; font-size: 18px; font-weight: 500; }
-    .hero .meta { margin: 0; color: var(--muted); font-size: 15px; }
-    .ghost-btn { border: 1px solid #cfd7e0; background: #fff; border-radius: 2px; padding: 14px 16px; font-size: 16px; cursor: pointer; }
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .btn{border:0;border-radius:8px;padding:12px 18px;cursor:pointer;font-size:15px}
+    .btn-primary{background:#0f7df2;color:#fff}
+    .btn-success{background:#065f5b;color:#fff}
+    .agree{display:flex;align-items:center;gap:10px;font-size:15px;margin-top:12px}
+    .status{margin-top:10px;border-radius:8px;padding:10px 12px;font-size:14px;display:none}
+    .status.show{display:block}
+    .status.success{background:#ecfdf3;color:#065f46;border:1px solid #a7f3d0}
+    .status.warning{background:#fffbeb;color:#92400e;border:1px solid #fcd34d}
+    .status.error{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
 
-    .form-wrap { max-width: 1120px; margin: 0 auto; padding: 24px 28px 32px; }
-    .section-row { display: grid; grid-template-columns: 240px 1fr; gap: 28px; padding: 18px 0; border-top: 1px solid #d8dde4; }
-    .section-row:first-child { border-top: 0; }
-    .section-label h3 { margin: 0 0 8px; font-size: 18px; font-weight: 500; }
-    .section-label p { margin: 0; color: #7290a6; font-size: 14px; line-height: 1.2; }
-
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
-    .field label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 16px; }
-    .field label .req { color: #ef4444; }
-    .field input, .field textarea, .field select { width: 100%; border: 1px solid #ced6df; border-radius: 7px; padding: 11px 12px; font-size: 15px; font-family: inherit; background: #fff; }
-    .field textarea { min-height: 108px; resize: vertical; }
-    .full { grid-column: 1 / -1; }
-
-    .upload-row { display: grid; grid-template-columns: 170px 1fr 56px; max-width: 760px; }
-    .upload-row button, .upload-row .file-name, .upload-row .remove-file {
-      border: 1px solid #ced6df; min-height: 54px; display: flex; align-items: center; justify-content: center; background: #fff;
-      font-size: 15px;
-    }
-    .upload-row button { border-radius: 8px 0 0 8px; cursor: pointer; }
-    .upload-row .file-name { border-left: 0; justify-content: flex-start; padding: 0 12px; color: #0f7df2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .upload-row .remove-file { border-left: 0; border-radius: 0 8px 8px 0; cursor: pointer; }
-    input[type="file"] { display: none; }
-
-    .tabs-inline { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-    .tab-chip { border: 1px solid #d4dbe4; background: #f8fafc; border-radius: 999px; padding: 6px 12px; font-size: 38px; color: #334155; }
-
-    .agree { display: flex; align-items: center; gap: 10px; font-size: 15px; margin: 10px 0; }
-    .agree input { width: 18px; height: 18px; }
-    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn { border: 0; border-radius: 8px; padding: 12px 18px; cursor: pointer; font-size: 15px; }
-    .btn-success { background: #065f5b; color: #fff; }
-
-    .status { margin-top: 10px; border-radius: 8px; padding: 10px 12px; font-size: 14px; display: none; }
-    .status.show { display: block; }
-    .status.success { background: #ecfdf3; color: #065f46; border: 1px solid #a7f3d0; }
-    .status.warning { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
-    .status.error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-
-    @media (max-width: 1200px) {
-      .layout { flex-direction: column; }
-      .sidebar { width: 100%; }
-      .hero { flex-direction: column; }
-      .section-row { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: 1fr; }
-      .hero .logo-title { font-size: 38px; }
-      .hero .job-title { font-size: 30px; }
-      .section-label h3 { font-size: 28px; }
-      .section-label p { font-size: 20px; }
-      .field label { font-size: 18px; }
-      .field input, .field textarea, .field select,
-      .btn, .agree, .status,
-      .upload-row button, .upload-row .file-name, .upload-row .remove-file,
-      .tab-chip { font-size: 16px; }
+    @media (max-width:1100px){
+      .layout{flex-direction:column}.sidebar{width:100%}.grid{grid-template-columns:1fr}.title-wrap h1{font-size:34px}
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -112,11 +71,11 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="brand">🛡️ OR Tambo</div>
-      <div class="search"><input placeholder="search" aria-label="Search menu" /></div>
-      <nav class="menu" aria-label="Portal left navigation">
-        <button class="menu-item"><span class="left">🏠 Dashboard</span></button>
+      <div class="search"><input placeholder="search"></div>
+      <nav class="menu">
+        <button class="menu-item">🏠 Dashboard</button>
         <div class="menu-group">
-          <button class="menu-item active"><span class="row"><span class="left">⚙️ Administration</span><span>▾</span></span></button>
+          <button class="menu-item active">⚙️ Administration</button>
           <div class="submenu">
             <button class="submenu-item">👤 Manage My Profile</button>
             <button class="submenu-item active">📄 My CV</button>
@@ -128,58 +87,37 @@
 
     <main class="content">
       <header class="topbar">
-        <div>☰ Demo Applicant Portal</div>
-        <div><span class="badge">Applicant</span> Demo Login: applicant.demo@ortambo.gov.za</div>
+        <div>☰ OR Tambo E‑Recruitment</div>
+        <div><span class="badge">Applicant</span>abongile Goci</div>
       </header>
-
       <div class="page">
         <article class="card">
-          <header class="hero">
-            <div>
-              <h1 class="logo-title">OR Tambo</h1>
-              <h2 class="job-title">Applicant CV Submission Form</h2>
-              <p class="meta">📍 South Africa &nbsp;&nbsp; 🪪 JOB ID - 13606</p>
-            </div>
-            <button class="ghost-btn" type="button">▣ View Job Description</button>
-          </header>
+          <div class="title-wrap">
+            <h1>OR Tambo E‑Recruitment Applicant CV</h1>
+          </div>
 
-          <div class="form-wrap">
-            <div class="tabs-inline" aria-label="Section tabs moved onto form">
-              <span class="tab-chip">Personal Information</span>
-              <span class="tab-chip">Address Information</span>
-              <span class="tab-chip">Professional Profile</span>
-            </div>
-
-            <section class="section-row">
-              <div class="section-label">
-                <h3>Personal Information</h3>
-                <p>Your Name & Contact Information</p>
+          <form class="form-wrap" id="cvForm">
+            <section class="section">
+              <h3>Personal Information</h3>
+              <div class="field full">
+                <label>Upload your CV<span class="req">*</span></label>
+                <div class="upload-row">
+                  <button id="uploadTrigger" type="button">⬆ Upload File</button>
+                  <div class="file-name" id="fileName">No file selected</div>
+                  <div class="remove-file" id="removeFile">🗑</div>
+                </div>
+                <input id="cvUpload" type="file" accept=".txt,.pdf,.docx,.doc" />
               </div>
-              <div>
-                <div class="field full">
-                  <label>Upload your resume<span class="req">*</span></label>
-                  <div class="upload-row">
-                    <button id="uploadTrigger" type="button">⬆ Upload File</button>
-                    <div class="file-name" id="fileName">No file selected</div>
-                    <div class="remove-file" id="removeFile">🗑</div>
-                  </div>
-                  <input id="cvUpload" type="file" accept=".txt,.pdf,.docx,.doc" />
-                </div>
-
-                <div class="grid" style="margin-top:14px;">
-                  <div class="field"><label for="firstName">First Name<span class="req">*</span></label><input id="firstName" /></div>
-                  <div class="field"><label for="lastName">Last Name<span class="req">*</span></label><input id="lastName" /></div>
-                  <div class="field"><label for="email">Email<span class="req">*</span></label><input id="email" type="email" /></div>
-                  <div class="field"><label for="phone">Phone<span class="req">*</span></label><input id="phone" /></div>
-                </div>
+              <div class="grid" style="margin-top:14px;">
+                <div class="field"><label for="firstName">First Name<span class="req">*</span></label><input id="firstName" /></div>
+                <div class="field"><label for="lastName">Last Name<span class="req">*</span></label><input id="lastName" /></div>
+                <div class="field"><label for="email">Email<span class="req">*</span></label><input id="email" type="email" /></div>
+                <div class="field"><label for="phone">Phone<span class="req">*</span></label><input id="phone" /></div>
               </div>
             </section>
 
-            <section class="section-row">
-              <div class="section-label">
-                <h3>Address Information</h3>
-                <p>Your location details</p>
-              </div>
+            <section class="section">
+              <h3>Address Information</h3>
               <div class="grid">
                 <div class="field"><label for="city">City of Residence<span class="req">*</span></label><input id="city" /></div>
                 <div class="field"><label for="country">Country<span class="req">*</span></label><select id="country"><option value="">Not Selected</option><option>South Africa</option><option>Lesotho</option><option>Namibia</option></select></div>
@@ -188,51 +126,96 @@
               </div>
             </section>
 
-            <section class="section-row">
-              <div class="section-label">
-                <h3>Professional Profile</h3>
-                <p>Link your profiles</p>
+            <section class="section">
+              <h3>Qualifications</h3>
+              <div class="grid">
+                <div class="field"><label for="institution">Institution</label><input id="institution" /></div>
+                <div class="field"><label for="qualification">Qualification Name</label><input id="qualification" /></div>
+                <div class="field"><label for="fieldOfStudy">Field of Study</label><input id="fieldOfStudy" /></div>
+                <div class="field"><label for="graduationDate">Graduation Date</label><input id="graduationDate" type="date" /></div>
               </div>
+            </section>
+
+            <section class="section">
+              <h3>Certifications & Work Experience</h3>
+              <div class="grid">
+                <div class="field full"><label for="certifications">Certifications</label><textarea id="certifications"></textarea></div>
+                <div class="field full"><label for="workExperience">Work Experience</label><textarea id="workExperience"></textarea></div>
+              </div>
+            </section>
+
+            <section class="section">
+              <h3>References, Soft Skills, Documents, Professional Body</h3>
+              <div class="grid">
+                <div class="field full"><label for="references">References</label><textarea id="references"></textarea></div>
+                <div class="field full"><label for="softSkills">Soft Skills</label><textarea id="softSkills"></textarea></div>
+                <div class="field full"><label for="documents">Additional Documents</label><textarea id="documents"></textarea></div>
+                <div class="field full"><label for="professionalBody">Professional Body</label><textarea id="professionalBody"></textarea></div>
+              </div>
+            </section>
+
+            <section class="section">
+              <h3>Professional Profile</h3>
               <div class="grid">
                 <div class="field"><label for="linkedin">LinkedIn Profile</label><input id="linkedin" placeholder="https://www.linkedin.com/in/your-profile" /></div>
                 <div class="field"><label for="github">Github Profile</label><input id="github" placeholder="https://github.com/your-profile" /></div>
               </div>
-            </section>
-
-            <section class="section-row" style="grid-template-columns:1fr;">
-              <div>
-                <label class="agree"><input type="checkbox" id="agreeTerms" /> I agree to <u>Candidate Terms</u></label>
-                <div class="actions">
-                  <button class="btn btn-success" id="submitBtn" type="button">Submit Your Application</button>
-                </div>
-                <div class="status" id="statusMsg"></div>
+              <label class="agree"><input type="checkbox" id="agreeTerms" /> I agree to <u>Candidate Terms</u></label>
+              <div class="actions">
+                <button class="btn btn-primary" id="saveBtn" type="button">Save Information</button>
+                <button class="btn btn-success" id="submitBtn" type="button">Submit Application</button>
               </div>
+              <div class="status" id="statusMsg"></div>
             </section>
-          </div>
+          </form>
         </article>
       </div>
     </main>
   </div>
 
   <script>
+    const storageKey = 'ortambo_cv_form_data_v1';
     const statusMsg = document.getElementById('statusMsg');
     const cvUpload = document.getElementById('cvUpload');
     const fileName = document.getElementById('fileName');
-
-    const cityList = [
-      'Mthatha', 'Umtata', 'East London', 'Durban', 'Johannesburg', 'Cape Town',
-      'Pretoria', 'Bloemfontein', 'Gqeberha', 'Port Elizabeth', 'Polokwane', 'Nelspruit'
+    const formFields = [
+      'firstName','lastName','email','phone','city','country','address','postalCode','institution','qualification',
+      'fieldOfStudy','graduationDate','certifications','workExperience','references','softSkills','documents',
+      'professionalBody','linkedin','github'
     ];
+    const cityList = ['Mthatha','Umtata','East London','Durban','Johannesburg','Cape Town','Pretoria','Bloemfontein','Gqeberha','Port Elizabeth','Polokwane','Nelspruit'];
 
-    function showStatus(message, type = 'success') {
+    function showStatus(message, type='success') {
       statusMsg.textContent = message;
       statusMsg.className = `status show ${type}`;
       clearTimeout(showStatus.timer);
-      showStatus.timer = setTimeout(() => statusMsg.className = 'status', 5000);
+      showStatus.timer = setTimeout(() => statusMsg.className = 'status', 5500);
+    }
+
+    function setIfEmpty(id, value) {
+      if (!value) return;
+      const el = document.getElementById(id);
+      if (!el.value.trim()) el.value = value.trim();
+    }
+
+    function saveFormToStorage() {
+      const payload = {};
+      formFields.forEach((id) => payload[id] = document.getElementById(id).value);
+      payload.agreeTerms = document.getElementById('agreeTerms').checked;
+      localStorage.setItem(storageKey, JSON.stringify(payload));
+    }
+
+    function loadFormFromStorage() {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return;
+      try {
+        const payload = JSON.parse(raw);
+        formFields.forEach((id) => { if (payload[id] !== undefined) document.getElementById(id).value = payload[id]; });
+        document.getElementById('agreeTerms').checked = !!payload.agreeTerms;
+      } catch { /* ignore bad stored state */ }
     }
 
     document.getElementById('uploadTrigger').addEventListener('click', () => cvUpload.click());
-
     document.getElementById('removeFile').addEventListener('click', () => {
       cvUpload.value = '';
       fileName.textContent = 'No file selected';
@@ -255,50 +238,28 @@
 
     async function extractTextFromDocx(file) {
       if (!window.mammoth) throw new Error('DOCX parser unavailable in this browser session.');
-      const arrayBuffer = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer });
+      const result = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
       return result.value;
     }
 
     async function getCvText(file) {
-      if (!file) return '';
       const ext = file.name.split('.').pop().toLowerCase();
       if (ext === 'txt') return file.text();
       if (ext === 'pdf') return extractTextFromPdf(file);
       if (ext === 'docx') return extractTextFromDocx(file);
-      if (ext === 'doc') throw new Error('DOC cannot be parsed directly. Please upload TXT/PDF/DOCX.');
+      if (ext === 'doc') throw new Error('DOC cannot be parsed directly. Use TXT/PDF/DOCX.');
       throw new Error('Unsupported file format. Use TXT, PDF, or DOCX.');
     }
 
-    function findAddressLine(lines) {
-      return lines.find((line) => {
-        const clean = line.replace(/\s+/g, ' ').trim();
-        const hasAddressWord = /(street|st\b|road|rd\b|avenue|ave|drive|dr\b|lane|ln\b|address)/i.test(clean);
-        const hasDigits = /\d/.test(clean);
-        const notRoleLine = !/(analyst|engineer|specialist|support|developer|manager|skills|experience)/i.test(clean);
-        return hasAddressWord && hasDigits && notRoleLine && clean.length <= 140;
-      }) || '';
+    function inferNameFromFile(fileNameValue) {
+      const base = fileNameValue.replace(/\.[^/.]+$/, '').replace(/[_-]+/g, ' ').replace(/\b(cv|resume|updated|final|copy|draft)\b/ig, ' ').replace(/\s+/g, ' ').trim();
+      const parts = base.split(' ').filter(Boolean);
+      if (parts.length >= 2) return { firstName: parts[0], lastName: parts[1] };
+      return { firstName: '', lastName: '' };
     }
 
-    function findCity(text, lines) {
-      const cityTaggedRaw = text.match(/(?:city|city\s*of\s*residence)\s*[:\-]\s*([^\n\r]+)/i)?.[1]?.trim() || '';
-      const cityTagged = cityTaggedRaw.replace(/\b(country|province)\b.*$/i, '').trim();
-      if (cityTagged) return cityTagged;
-
-      for (const city of cityList) {
-        if (new RegExp(`\\b${city.replace(' ', '\\s+')}\\b`, 'i').test(text)) return city;
-      }
-
-      const fromAddress = lines.find((line) => /,\s*[A-Za-z\s'-]+\s*,\s*\d{4}\b/.test(line));
-      if (fromAddress) {
-        const parts = fromAddress.split(',').map((p) => p.trim()).filter(Boolean);
-        return parts.length >= 2 ? parts[parts.length - 2] : '';
-      }
-      return '';
-    }
-
-    function extractDetails(text) {
-      const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+    function extractDetails(text, uploadName) {
+      const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
       const email = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || '';
       const phone = text.match(/(?:\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}|\+?\d[\d\s-]{8,}/)?.[0] || '';
 
@@ -309,65 +270,78 @@
         firstName = nameTagged[1];
         lastName = nameTagged[2];
       } else {
-        const nameLine = lines.find((line) => /^[A-Za-z'-]{2,}\s+[A-Za-z'-]{2,}$/.test(line));
-        if (nameLine) [firstName, lastName] = nameLine.split(/\s+/, 2);
+        const likelyName = lines.find((l) => /^[A-Za-z'-]{2,}\s+[A-Za-z'-]{2,}$/.test(l));
+        if (likelyName) [firstName, lastName] = likelyName.split(/\s+/, 2);
+      }
+      if (!firstName || !lastName) {
+        const fromFile = inferNameFromFile(uploadName);
+        firstName ||= fromFile.firstName;
+        lastName ||= fromFile.lastName;
+      }
+      if ((!firstName || !lastName) && email) {
+        const u = email.split('@')[0].replace(/[._-]+/g, ' ');
+        const parts = u.split(' ').filter(Boolean);
+        if (parts.length >= 2) {
+          firstName ||= parts[0];
+          lastName ||= parts[parts.length - 1];
+        }
       }
 
-      const address = findAddressLine(lines).replace(/^address\s*[:\-]?\s*/i, '').trim();
-      const city = findCity(text, lines);
+      const address = lines.find((line) => /(street|st\b|road|rd\b|avenue|ave|drive|dr\b|lane|ln\b|address)/i.test(line) && /\d/.test(line) && line.length < 140) || '';
+      const cityTagged = text.match(/(?:city|city\s*of\s*residence)\s*[:\-]\s*([^\n\r]+)/i)?.[1]?.replace(/\b(country|province)\b.*$/i, '').trim() || '';
+      let city = cityTagged;
+      if (!city) city = cityList.find((c) => new RegExp(`\\b${c.replace(' ', '\\s+')}\\b`, 'i').test(text)) || '';
       const country = /south africa/i.test(text) ? 'South Africa' : '';
-      const postalCode = address.match(/\b\d{4}\b/)?.[0] || text.match(/\b\d{4}\b/)?.[0] || '';
+      const postalCode = (address.match(/\b\d{4}\b/) || text.match(/\b\d{4}\b/) || [''])[0];
       const linkedin = text.match(/https?:\/\/(www\.)?linkedin\.com\/[^\s]+/i)?.[0] || '';
       const github = text.match(/https?:\/\/(www\.)?github\.com\/[^\s]+/i)?.[0] || '';
 
-      return { firstName, lastName, email, phone, address, city, country, postalCode, linkedin, github };
+      return { firstName, lastName, email, phone, address: address.replace(/^address\s*[:\-]?\s*/i,''), city, country, postalCode, linkedin, github };
     }
 
     function applyDetails(details) {
-      const set = (id, value) => {
-        if (!value) return;
-        document.getElementById(id).value = value;
-      };
-
-      set('firstName', details.firstName);
-      set('lastName', details.lastName);
-      set('email', details.email);
-      set('phone', details.phone);
-      set('address', details.address);
-      set('city', details.city);
-      set('postalCode', details.postalCode);
-      set('linkedin', details.linkedin);
-      set('github', details.github);
-      if (details.country) document.getElementById('country').value = details.country;
+      setIfEmpty('firstName', details.firstName);
+      setIfEmpty('lastName', details.lastName);
+      setIfEmpty('email', details.email);
+      setIfEmpty('phone', details.phone);
+      setIfEmpty('address', details.address);
+      setIfEmpty('city', details.city);
+      setIfEmpty('postalCode', details.postalCode);
+      setIfEmpty('linkedin', details.linkedin);
+      setIfEmpty('github', details.github);
+      if (!document.getElementById('country').value && details.country) document.getElementById('country').value = details.country;
     }
 
     cvUpload.addEventListener('change', async () => {
       const file = cvUpload.files[0];
       fileName.textContent = file ? file.name : 'No file selected';
       if (!file) return;
-
       try {
         const text = await getCvText(file);
-        const details = extractDetails(text);
-        applyDetails(details);
-        showStatus('CV uploaded and form auto-filled. Please review before submitting.', 'success');
+        applyDetails(extractDetails(text, file.name));
+        saveFormToStorage();
+        showStatus('CV uploaded and form auto-filled automatically.', 'success');
       } catch (error) {
         showStatus(error.message, 'error');
       }
     });
 
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      saveFormToStorage();
+      showStatus('Information saved successfully.', 'success');
+    });
+
     document.getElementById('submitBtn').addEventListener('click', () => {
-      const required = ['firstName', 'lastName', 'email', 'phone', 'city', 'country'];
+      const required = ['firstName','lastName','email','phone','city','country'];
       const missing = required.filter((id) => !document.getElementById(id).value.trim());
-      const hasFile = !!cvUpload.files[0];
-      const agreed = document.getElementById('agreeTerms').checked;
-
-      if (!hasFile) return showStatus('Please upload your CV before submitting.', 'warning');
-      if (missing.length) return showStatus('Please complete all required fields before submitting.', 'warning');
-      if (!agreed) return showStatus('Please agree to Candidate Terms before submitting.', 'warning');
-
+      if (!cvUpload.files[0]) return showStatus('Please upload your CV before submitting.', 'warning');
+      if (missing.length) return showStatus('Please complete required fields before submitting.', 'warning');
+      if (!document.getElementById('agreeTerms').checked) return showStatus('Please agree to Candidate Terms.', 'warning');
+      saveFormToStorage();
       showStatus(`Application submitted successfully with CV "${cvUpload.files[0].name}" (demo).`, 'success');
     });
+
+    loadFormFromStorage();
   </script>
 </body>
 </html>
