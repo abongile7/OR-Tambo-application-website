@@ -1,12 +1,9 @@
 [build]
   publish = "."
 
-[[redirects]]
-  from = "/"
-  to = "/applicant-manage-applications-demo.html"
-  status = 200
-
+# Keep root on the physical index.html file to avoid rewrite issues.
+# This is the safest static setup for Netlify preview and production.
 [[redirects]]
   from = "/applicant-manage-applications"
-  to = "/applicant-manage-applications-demo.html"
+  to = "/index.html"
   status = 200

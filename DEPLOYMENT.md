@@ -14,6 +14,11 @@ netlify deploy --prod --dir=.
 ```
 
 ## URLs after deploy
-- `/` opens the demo page.
-- `/applicant-manage-applications` also maps to the demo page.
+- `/` opens `index.html` directly (stable default behavior on Netlify).
+- `/applicant-manage-applications` rewrites to `index.html`.
 - `/applicant-manage-applications-demo.html` remains directly accessible.
+
+## If you still see a Netlify error page
+- Trigger a **Clear cache and deploy site** from Netlify Deploys.
+- Confirm the deploy is using this repo root as the publish content.
+- Verify `index.html` exists in the published output (Deploy details → files).
