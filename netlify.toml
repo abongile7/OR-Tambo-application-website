@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/applicant-manage-applications-demo.html"
+  status = 200
+
+[[redirects]]
+  from = "/applicant-manage-applications"
+  to = "/applicant-manage-applications-demo.html"
+  status = 200
