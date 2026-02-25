@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OR Tambo | Applicant Portal Demo</title>
+  <style>
+    :root {
+      --sidebar: #313a44;
+      --sidebar-border: #4a5360;
+      --sidebar-text: #d8dee6;
+      --sidebar-muted: #9ea7b4;
+      --sidebar-active: #147ff0;
+      --bg: #eef1f6;
+      --panel: #ffffff;
+      --border: #dfe3e8;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --success: #12b76a;
+      --danger: #b42318;
+      --warning: #f59e0b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .layout {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 330px;
+      background: var(--sidebar);
+      color: var(--sidebar-text);
+      border-right: 1px solid #27303a;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--sidebar-border);
+      font-size: 42px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .search {
+      padding: 14px;
+      border-bottom: 1px solid var(--sidebar-border);
+    }
+
+    .search input {
+      width: 100%;
+      border: 1px solid #526170;
+      background: #3e4a57;
+      color: #fff;
+      border-radius: 5px;
+      padding: 10px 12px;
+      font-size: 16px;
+    }
+
+    .menu {
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .menu-item,
+    .submenu-item {
+      width: 100%;
+      border: 0;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: left;
+      color: var(--sidebar-text);
+      background: transparent;
+      padding: 11px 12px;
+      font-size: 18px;
+      transition: background .15s ease;
+    }
+
+    .menu-item:hover,
+    .submenu-item:hover { background: #3a4552; }
+
+    .menu-item.active,
+    .submenu-item.active {
+      background: var(--sidebar-active);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .menu-item .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .menu-item .left,
+    .submenu-item .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-group {
+      background: #2e3742;
+      border-radius: 8px;
+      border: 1px solid #3e4956;
+      overflow: hidden;
+    }
+
+    .submenu {
+      display: none;
+      padding: 6px;
+      background: #2a333d;
+      border-top: 1px solid #404b58;
+      gap: 6px;
+    }
+
+    .menu-group.open .submenu { display: grid; }
+
+    .content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 72px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 26px;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 2px 8px;
+      background: #16a34a;
+      color: #fff;
+      font-size: 12px;
+      margin-right: 6px;
+      font-weight: 600;
+    }
+
+    .page { padding: 24px; }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(17, 24, 39, 0.05);
+      overflow: hidden;
+    }
+
+    .page-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      background: #f9fbfd;
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: 36px;
+      font-weight: 500;
+    }
+
+    .page-description {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .section-body { padding: 20px; }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 14px;
+      background: #fff;
+    }
+
+    .panel h3 { margin-top: 0; margin-bottom: 12px; }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      background: #f6f8fb;
+    }
+
+    .tab-btn {
+      border: 0;
+      background: transparent;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-size: 15px;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab-btn.active {
+      background: #fff;
+      border-bottom-color: #0f7df2;
+      color: #0f7df2;
+      font-weight: 600;
+    }
+
+    .tab-panel { display: none; padding: 16px; }
+    .tab-panel.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid #ccd3dc;
+      border-radius: 6px;
+      padding: 10px 11px;
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    .field textarea { min-height: 100px; resize: vertical; }
+    .full { grid-column: 1 / -1; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-primary { background: #0f7df2; color: #fff; }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    .btn-success { background: var(--success); color: #fff; }
+
+    .status {
+      margin-top: 12px;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status.show { display: block; }
+    .status.success { background: #ecfdf3; color: #065f46; border: 1px solid #a7f3d0; }
+    .status.warning { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
+    .status.error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+    .helper {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    th { background: #f8fafc; }
+
+    .pill {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 999px;
+      padding: 2px 9px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    ul.clean {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1000px) {
+      .layout { flex-direction: column; }
+      .sidebar { width: 100%; }
+      .grid { grid-template-columns: 1fr; }
+      .page-title { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">🛡️ OR Tambo</div>
+      <div class="search"><input placeholder="search" aria-label="Search menu" /></div>
+
+      <nav class="menu" aria-label="Portal left navigation">
+        <button class="menu-item nav-link" data-section="dashboard">
+          <span class="left">🏠 Dashboard</span>
+        </button>
+
+        <div class="menu-group" data-group="administration">
+          <button class="menu-item" data-toggle-group="administration">
+            <span class="row"><span class="left">⚙️ Administration</span><span>▾</span></span>
+          </button>
+          <div class="submenu">
+            <button class="submenu-item nav-link" data-section="personal">
+              <span class="left">👤 Manage My Profile</span>
+            </button>
+            <button class="submenu-item nav-link" data-section="documents">
+              <span class="left">📄 My CV</span>
+            </button>
+            <button class="submenu-item nav-link active" data-section="applications">
+              <span class="left">🗂️ My Applications</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="menu-group" data-group="vacancies">
+          <button class="menu-item" data-toggle-group="vacancies">
+            <span class="row"><span class="left">💼 Vacancies</span><span>▾</span></span>
+          </button>
+          <div class="submenu">
+            <button class="submenu-item nav-link" data-section="vacancies-current"><span class="left">○ Current Vacancies</span></button>
+            <button class="submenu-item nav-link" data-section="vacancies-archived"><span class="left">○ Archived Vacancies</span></button>
+            <button class="submenu-item nav-link" data-section="how-to-apply"><span class="left">○ How to Apply</span></button>
+          </div>
+        </div>
+
+        <div class="menu-group" data-group="help">
+          <button class="menu-item" data-toggle-group="help">
+            <span class="row"><span class="left">ℹ️ Help Center</span><span>▾</span></span>
+          </button>
+          <div class="submenu">
+            <button class="submenu-item nav-link" data-section="help-faq"><span class="left">○ Frequently Asked Questions</span></button>
+            <button class="submenu-item nav-link" data-section="help-videos"><span class="left">○ Video Tutorials</span></button>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <div>☰ Demo Applicant Portal</div>
+        <div><span class="badge">Applicant</span> Demo Login: applicant.demo@ortambo.gov.za</div>
+      </header>
+
+      <div class="page">
+        <article class="card">
+          <header class="page-header">
+            <h1 class="page-title" id="pageTitle">My Applications</h1>
+            <p class="page-description" id="pageDescription">Improved, stable and user-friendly tab flow for applications.</p>
+          </header>
+
+          <section class="section active" id="section-applications">
+            <nav class="tabs" aria-label="Application form tabs">
+              <button class="tab-btn active" data-tab="overview">Application Overview</button>
+              <button class="tab-btn" data-tab="personal-form">Personal Details</button>
+              <button class="tab-btn" data-tab="education">Education</button>
+              <button class="tab-btn" data-tab="experience">Work Experience</button>
+              <button class="tab-btn" data-tab="documents-tab">Documents & CV Upload</button>
+            </nav>
+
+            <section class="tab-panel active" id="tab-overview">
+              <table>
+                <thead><tr><th>Reference</th><th>Job Title</th><th>Closing Date</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>CS/ICTECH/18/02/2026</td><td>ICT Technician</td><td>2026-03-12</td><td><span class="pill">Pending</span></td></tr>
+                  <tr><td>CS/PLATCOM/18/02/2026</td><td>Platoon Commander</td><td>2026-03-12</td><td><span class="pill">Pending</span></td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="tab-panel" id="tab-personal-form">
+              <div class="grid">
+                <div class="field"><label for="firstName">First Name</label><input id="firstName" /></div>
+                <div class="field"><label for="lastName">Last Name</label><input id="lastName" /></div>
+                <div class="field"><label for="email">Email</label><input id="email" type="email" /></div>
+                <div class="field"><label for="phone">Phone</label><input id="phone" /></div>
+                <div class="field"><label for="idNumber">ID Number</label><input id="idNumber" /></div>
+                <div class="field"><label for="citizenship">Citizenship</label><input id="citizenship" value="South African" /></div>
+                <div class="field full"><label for="address">Address</label><textarea id="address"></textarea></div>
+              </div>
+              <div class="actions"><button class="btn btn-primary" id="savePersonal">Save Personal Details</button></div>
+            </section>
+
+            <section class="tab-panel" id="tab-education">
+              <div class="grid">
+                <div class="field"><label>Highest Qualification</label><input /></div>
+                <div class="field"><label>Institution</label><input /></div>
+                <div class="field"><label>Completion Year</label><input type="number" /></div>
+                <div class="field"><label>Field of Study</label><input /></div>
+                <div class="field full"><label>Professional Registrations</label><textarea></textarea></div>
+              </div>
+            </section>
+
+            <section class="tab-panel" id="tab-experience">
+              <div class="grid">
+                <div class="field"><label>Current Employer</label><input /></div>
+                <div class="field"><label>Current Role</label><input /></div>
+                <div class="field"><label>Years of Experience</label><input type="number" /></div>
+                <div class="field"><label>Notice Period</label><select><option>Immediate</option><option>2 Weeks</option><option>1 Month</option></select></div>
+                <div class="field full"><label>Key Responsibilities</label><textarea></textarea></div>
+              </div>
+            </section>
+
+            <section class="tab-panel" id="tab-documents-tab">
+              <div class="grid">
+                <div class="field full">
+                  <label for="cvUpload">Upload CV (TXT, PDF, DOC, DOCX)</label>
+                  <input id="cvUpload" type="file" accept=".txt,.pdf,.doc,.docx" />
+                  <div class="helper">In this demo: TXT files auto-parse immediately. PDF/DOC/DOCX upload is simulated, then use pasted text for autofill.</div>
+                </div>
+                <div class="field full">
+                  <label for="cvText">CV text for auto-fill</label>
+                  <textarea id="cvText" placeholder="Paste CV text here if your file is PDF/DOC/DOCX..."></textarea>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn btn-success" id="autoFillBtn">Auto-fill Personal Details</button>
+                <button class="btn btn-secondary" id="simulateUploadBtn">Save Documents</button>
+              </div>
+              <div class="status" id="statusMsg"></div>
+            </section>
+          </section>
+
+          <section class="section" id="section-dashboard">
+            <div class="section-body">
+              <div class="panel"><h3>Welcome to your dashboard</h3><p>This demo keeps the OR Tambo look while improving consistency: left menu now works, sections are stable, and forms are easier to complete.</p></div>
+            </div>
+          </section>
+
+          <section class="section" id="section-personal">
+            <div class="section-body">
+              <div class="panel"><h3>Manage My Profile</h3><p>Profile section linked from left sidebar now opens correctly. Use My Applications > Personal Details to edit the full application form.</p></div>
+            </div>
+          </section>
+
+          <section class="section" id="section-documents">
+            <div class="section-body">
+              <div class="panel"><h3>My CV</h3><p>This links directly to the improved CV tab inside My Applications with auto-fill support.</p><div class="actions"><button class="btn btn-primary jump-to-documents">Open CV Upload Form</button></div></div>
+            </div>
+          </section>
+
+          <section class="section" id="section-vacancies-current">
+            <div class="section-body"><div class="panel"><h3>Current Vacancies</h3><p>Demo listing area for current opportunities.</p></div></div>
+          </section>
+          <section class="section" id="section-vacancies-archived">
+            <div class="section-body"><div class="panel"><h3>Archived Vacancies</h3><p>Demo listing area for archived opportunities.</p></div></div>
+          </section>
+          <section class="section" id="section-how-to-apply">
+            <div class="section-body"><div class="panel"><h3>How to Apply</h3><ul class="clean"><li>Create/update profile details.</li><li>Upload supporting documents and CV.</li><li>Review each application before submission.</li></ul></div></div>
+          </section>
+          <section class="section" id="section-help-faq">
+            <div class="section-body"><div class="panel"><h3>Frequently Asked Questions</h3><p>Help center section now stays on-page and no longer jumps unexpectedly.</p></div></div>
+          </section>
+          <section class="section" id="section-help-videos">
+            <div class="section-body"><div class="panel"><h3>Video Tutorials</h3><p>Placeholder for video tutorials in this demo version.</p></div></div>
+          </section>
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sectionsMeta = {
+      applications: { title: 'My Applications', description: 'Improved, stable and user-friendly tab flow for applications.' },
+      dashboard: { title: 'Dashboard', description: 'Applicant dashboard summary for quick access.' },
+      personal: { title: 'Manage My Profile', description: 'Update and maintain your profile information.' },
+      documents: { title: 'My CV', description: 'Upload CV and auto-fill personal information from CV text.' },
+      'vacancies-current': { title: 'Current Vacancies', description: 'Browse vacancies currently open for applications.' },
+      'vacancies-archived': { title: 'Archived Vacancies', description: 'View closed and archived vacancy posts.' },
+      'how-to-apply': { title: 'How to Apply', description: 'Step-by-step application guidance.' },
+      'help-faq': { title: 'Help Center - FAQ', description: 'Answers to common applicant questions.' },
+      'help-videos': { title: 'Help Center - Video Tutorials', description: 'Tutorials for using the recruitment system.' }
+    };
+
+    const pageTitle = document.getElementById('pageTitle');
+    const pageDescription = document.getElementById('pageDescription');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.section');
+
+    function openSection(sectionKey) {
+      navLinks.forEach((link) => link.classList.toggle('active', link.dataset.section === sectionKey));
+      sections.forEach((section) => section.classList.toggle('active', section.id === `section-${sectionKey}`));
+
+      const meta = sectionsMeta[sectionKey] || sectionsMeta.applications;
+      pageTitle.textContent = meta.title;
+      pageDescription.textContent = meta.description;
+    }
+
+    navLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        const sectionKey = link.dataset.section;
+        openSection(sectionKey);
+
+        if (sectionKey === 'documents') {
+          activateTab('documents-tab');
+          openSection('applications');
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-toggle-group]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const group = btn.dataset.toggleGroup;
+        document.querySelector(`.menu-group[data-group="${group}"]`).classList.toggle('open');
+      });
+    });
+
+    document.querySelector('.menu-group[data-group="administration"]').classList.add('open');
+    document.querySelector('.menu-group[data-group="vacancies"]').classList.add('open');
+    document.querySelector('.menu-group[data-group="help"]').classList.add('open');
+
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    function activateTab(tabKey) {
+      tabButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === tabKey));
+      tabPanels.forEach((panel) => panel.classList.toggle('active', panel.id === `tab-${tabKey}`));
+    }
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+    });
+
+    document.querySelectorAll('.jump-to-documents').forEach((button) => {
+      button.addEventListener('click', () => {
+        openSection('applications');
+        activateTab('documents-tab');
+      });
+    });
+
+    const statusMsg = document.getElementById('statusMsg');
+    function showStatus(message, type = 'success') {
+      statusMsg.textContent = message;
+      statusMsg.className = `status show ${type}`;
+      clearTimeout(showStatus.timer);
+      showStatus.timer = setTimeout(() => statusMsg.className = 'status', 4500);
+    }
+
+    function autoFillFromText(text) {
+      const emailMatch = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+      const phoneMatch = text.match(/(?:\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}/);
+      const nameTagged = text.match(/(?:name|full\s*name)\s*[:\-]\s*([A-Za-z'-]+)\s+([A-Za-z'-]+)/i);
+
+      if (nameTagged) {
+        document.getElementById('firstName').value = nameTagged[1];
+        document.getElementById('lastName').value = nameTagged[2];
+      }
+      if (emailMatch) document.getElementById('email').value = emailMatch[0];
+      if (phoneMatch) document.getElementById('phone').value = phoneMatch[0].replace(/\s+/g, ' ');
+
+      const hits = [nameTagged, emailMatch, phoneMatch].filter(Boolean).length;
+      if (!hits) {
+        showStatus('No name/email/phone found yet. Edit text format and try again.', 'warning');
+      } else {
+        openSection('applications');
+        activateTab('personal-form');
+        showStatus('Personal details auto-filled from CV data. Please review and save.', 'success');
+      }
+    }
+
+    document.getElementById('cvUpload').addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const isText = file.type.startsWith('text/') || file.name.toLowerCase().endsWith('.txt');
+      if (!isText) {
+        showStatus(`"${file.name}" uploaded for demo. For auto-fill, paste CV text below and click Auto-fill.`, 'warning');
+        return;
+      }
+
+      try {
+        const rawText = await file.text();
+        document.getElementById('cvText').value = rawText;
+        autoFillFromText(rawText);
+      } catch (error) {
+        showStatus('Could not read the uploaded file. Paste CV text manually.', 'error');
+      }
+    });
+
+    document.getElementById('autoFillBtn').addEventListener('click', () => {
+      const text = document.getElementById('cvText').value.trim();
+      if (!text) {
+        showStatus('Paste CV text first, then click Auto-fill.', 'warning');
+        return;
+      }
+      autoFillFromText(text);
+    });
+
+    document.getElementById('simulateUploadBtn').addEventListener('click', () => {
+      const file = document.getElementById('cvUpload').files[0];
+      if (!file) {
+        showStatus('Please choose your CV before saving.', 'warning');
+        return;
+      }
+      showStatus(`CV "${file.name}" saved successfully (demo).`, 'success');
+    });
+
+    document.getElementById('savePersonal').addEventListener('click', () => {
+      showStatus('Personal details saved successfully (demo).', 'success');
+    });
+  </script>
+</body>
+</html>
