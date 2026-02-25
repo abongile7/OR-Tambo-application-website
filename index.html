@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OR Tambo | Applicant Portal Demo</title>
+  <title>OR Tambo | CV Application Demo</title>
   <style>
     :root {
       --sidebar: #313a44;
@@ -18,11 +18,14 @@
       --success: #12b76a;
       --warning: #f59e0b;
       --danger: #b42318;
+      --brand: #065f5b;
     }
+
     * { box-sizing: border-box; }
     body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--text); }
     .layout { min-height: 100vh; display: flex; }
-    .sidebar { width: 330px; background: var(--sidebar); color: var(--sidebar-text); border-right: 1px solid #27303a; overflow-y: auto; }
+
+    .sidebar { width: 320px; background: var(--sidebar); color: var(--sidebar-text); border-right: 1px solid #27303a; overflow-y: auto; }
     .brand { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--sidebar-border); font-size: 42px; font-weight: 600; color: #fff; }
     .search { padding: 14px; border-bottom: 1px solid var(--sidebar-border); }
     .search input { width: 100%; border: 1px solid #526170; background: #3e4a57; color: #fff; border-radius: 5px; padding: 10px 12px; font-size: 16px; }
@@ -40,62 +43,71 @@
     .topbar { height: 72px; background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 26px; }
     .badge { display: inline-block; border-radius: 4px; padding: 2px 8px; background: #16a34a; color: #fff; font-size: 12px; margin-right: 6px; font-weight: 600; }
     .page { padding: 24px; }
-    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 8px rgba(17, 24, 39, .05); overflow: hidden; }
-    .page-header { padding: 20px; border-bottom: 1px solid var(--border); background: #f9fbfd; }
-    .page-title { margin: 0; font-size: 36px; font-weight: 500; }
-    .page-description { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
 
-    .section { display: none; }
-    .section.active { display: block; }
-    .section-body { padding: 20px; }
-    .panel { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 14px; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .hero { padding: 28px 28px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .hero h1 { margin: 0; font-size: 64px; line-height: .95; color: var(--brand); font-family: Georgia, 'Times New Roman', serif; }
+    .hero h2 { margin: 14px 0 8px; font-weight: 500; font-size: 42px; }
+    .hero p { margin: 0; color: var(--muted); }
+    .ghost-btn { border: 1px solid #cfd7e0; background: #fff; border-radius: 2px; padding: 14px 20px; font-size: 28px; cursor: pointer; }
 
-    .tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border); background: #f6f8fb; }
-    .tab-btn { border: 0; background: transparent; padding: 12px 14px; cursor: pointer; font-size: 15px; border-bottom: 3px solid transparent; }
-    .tab-btn.active { background: #fff; border-bottom-color: #0f7df2; color: #0f7df2; font-weight: 600; }
-    .tab-panel { display: none; padding: 16px; }
-    .tab-panel.active { display: block; }
+    .form-wrap { max-width: 1320px; margin: 0 auto; padding: 26px 28px 32px; }
+    .section-row { display: grid; grid-template-columns: 320px 1fr; gap: 30px; padding: 22px 0; border-top: 1px solid #d8dde4; }
+    .section-row:first-of-type { border-top: 0; }
+    .section-label h3 { margin: 0 0 8px; font-size: 44px; font-weight: 500; }
+    .section-label p { margin: 0; color: #7791a5; font-size: 41px; line-height: 1.2; }
 
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .field label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
-    .field input, .field textarea, .field select { width: 100%; border: 1px solid #ccd3dc; border-radius: 6px; padding: 10px 11px; font-size: 15px; font-family: inherit; }
-    .field textarea { min-height: 100px; resize: vertical; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 22px; }
+    .field label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 33px; }
+    .field label .req { color: #ef4444; }
+    .field input, .field textarea, .field select {
+      width: 100%; border: 1px solid #ced6df; border-radius: 8px; padding: 14px 16px;
+      font-size: 35px; font-family: inherit; background: #fff;
+    }
+    .field textarea { min-height: 140px; resize: vertical; }
     .full { grid-column: 1 / -1; }
 
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-    .btn { border: 0; border-radius: 6px; padding: 10px 14px; cursor: pointer; font-size: 14px; }
-    .btn-primary { background: #0f7df2; color: #fff; }
-    .btn-secondary { background: #e5e7eb; color: #111827; }
-    .btn-success { background: var(--success); color: #fff; }
+    .upload-row { display: grid; grid-template-columns: 180px 1fr 66px; gap: 0; max-width: 860px; }
+    .upload-row button, .upload-row .file-name, .upload-row .remove-file {
+      border: 1px solid #ced6df; background: #fff; min-height: 66px; display: flex; align-items: center; justify-content: center; font-size: 38px;
+    }
+    .upload-row button { border-radius: 8px 0 0 8px; cursor: pointer; }
+    .upload-row .file-name { border-left: 0; justify-content: flex-start; padding: 0 16px; color: #0f7df2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .upload-row .remove-file { border-left: 0; border-radius: 0 8px 8px 0; cursor: pointer; }
+    input[type="file"] { display: none; }
 
-    .status { margin-top: 12px; border-radius: 6px; padding: 10px 12px; font-size: 14px; display: none; }
+    .actions { padding-top: 8px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { border: 0; border-radius: 8px; padding: 13px 18px; cursor: pointer; font-size: 29px; }
+    .btn-primary { background: #0f7df2; color: #fff; }
+    .btn-success { background: #065f5b; color: #fff; }
+
+    .agree { display: flex; align-items: center; gap: 10px; font-size: 33px; margin: 16px 0 8px; }
+    .agree input { width: 24px; height: 24px; }
+
+    .status { margin-top: 10px; border-radius: 8px; padding: 12px 14px; font-size: 27px; display: none; }
     .status.show { display: block; }
     .status.success { background: #ecfdf3; color: #065f46; border: 1px solid #a7f3d0; }
     .status.warning { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
     .status.error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
-    .helper { margin-top: 8px; color: var(--muted); font-size: 13px; }
-    .method-switch { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
-    .method-card { border: 1px solid #cdd5df; border-radius: 8px; padding: 12px; cursor: pointer; background: #fff; }
-    .method-card.active { border-color: #0f7df2; box-shadow: inset 0 0 0 1px #0f7df2; background: #f8fbff; }
-    .method-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-    .method-desc { color: var(--muted); font-size: 13px; line-height: 1.4; }
-    .hidden { display: none; }
-    .extract-preview { border: 1px dashed #b8c2cf; background: #fbfdff; border-radius: 8px; padding: 12px; margin-top: 10px; }
-    .extract-preview h4 { margin: 0 0 8px; }
-    .extract-list { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .panel { border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
 
-    table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); font-size: 14px; }
-    th { background: #f8fafc; }
-    .pill { display: inline-block; background: #fef3c7; color: #92400e; border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 600; }
-    ul.clean { margin: 0; padding-left: 18px; display: grid; gap: 8px; line-height: 1.45; }
-
-    @media (max-width: 1000px) {
+    @media (max-width: 1200px) {
       .layout { flex-direction: column; }
       .sidebar { width: 100%; }
-      .grid, .method-switch { grid-template-columns: 1fr; }
-      .page-title { font-size: 30px; }
+      .section-row { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .hero { flex-direction: column; }
+      .hero h1 { font-size: 54px; }
+      .hero h2 { font-size: 34px; }
+      .field label { font-size: 22px; }
+      .field input, .field textarea, .field select, .btn, .agree, .status { font-size: 20px; }
+      .upload-row button, .upload-row .file-name, .upload-row .remove-file { font-size: 22px; }
+      .section-label h3 { font-size: 32px; }
+      .section-label p { font-size: 24px; }
+      .ghost-btn { font-size: 20px; }
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -108,27 +120,19 @@
       <div class="search"><input placeholder="search" aria-label="Search menu" /></div>
       <nav class="menu" aria-label="Portal left navigation">
         <button class="menu-item nav-link" data-section="dashboard"><span class="left">🏠 Dashboard</span></button>
-        <div class="menu-group" data-group="administration">
+        <div class="menu-group open" data-group="administration">
           <button class="menu-item" data-toggle-group="administration"><span class="row"><span class="left">⚙️ Administration</span><span>▾</span></span></button>
           <div class="submenu">
             <button class="submenu-item nav-link" data-section="personal"><span class="left">👤 Manage My Profile</span></button>
-            <button class="submenu-item nav-link" data-section="documents"><span class="left">📄 My CV</span></button>
-            <button class="submenu-item nav-link active" data-section="applications"><span class="left">🗂️ My Applications</span></button>
+            <button class="submenu-item nav-link active" data-section="cv-form"><span class="left">📄 My CV</span></button>
+            <button class="submenu-item nav-link" data-section="applications"><span class="left">🗂️ My Applications</span></button>
           </div>
         </div>
-        <div class="menu-group" data-group="vacancies">
+        <div class="menu-group open" data-group="vacancies">
           <button class="menu-item" data-toggle-group="vacancies"><span class="row"><span class="left">💼 Vacancies</span><span>▾</span></span></button>
           <div class="submenu">
             <button class="submenu-item nav-link" data-section="vacancies-current"><span class="left">○ Current Vacancies</span></button>
             <button class="submenu-item nav-link" data-section="vacancies-archived"><span class="left">○ Archived Vacancies</span></button>
-            <button class="submenu-item nav-link" data-section="how-to-apply"><span class="left">○ How to Apply</span></button>
-          </div>
-        </div>
-        <div class="menu-group" data-group="help">
-          <button class="menu-item" data-toggle-group="help"><span class="row"><span class="left">ℹ️ Help Center</span><span>▾</span></span></button>
-          <div class="submenu">
-            <button class="submenu-item nav-link" data-section="help-faq"><span class="left">○ Frequently Asked Questions</span></button>
-            <button class="submenu-item nav-link" data-section="help-videos"><span class="left">○ Video Tutorials</span></button>
           </div>
         </div>
       </nav>
@@ -141,162 +145,100 @@
       </header>
 
       <div class="page">
-        <article class="card">
-          <header class="page-header">
-            <h1 class="page-title" id="pageTitle">My Applications</h1>
-            <p class="page-description" id="pageDescription">Improved, stable and user-friendly tab flow for applications.</p>
+        <article class="card section active" id="section-cv-form">
+          <header class="hero">
+            <div>
+              <h1>Somewhere</h1>
+              <h2>SU - Website QA Specialist</h2>
+              <p>📍 South Africa &nbsp;&nbsp; 🪪 JOB ID -13606</p>
+            </div>
+            <button class="ghost-btn" type="button">▣ View Job Description</button>
           </header>
 
-          <section class="section active" id="section-applications">
-            <nav class="tabs" aria-label="Application form tabs">
-              <button class="tab-btn active" data-tab="overview">Application Overview</button>
-              <button class="tab-btn" data-tab="personal-form">Personal Details</button>
-              <button class="tab-btn" data-tab="education">Education</button>
-              <button class="tab-btn" data-tab="experience">Work Experience</button>
-              <button class="tab-btn" data-tab="documents-tab">Documents & CV Upload</button>
-            </nav>
-
-            <section class="tab-panel active" id="tab-overview">
-              <table>
-                <thead><tr><th>Reference</th><th>Job Title</th><th>Closing Date</th><th>Status</th></tr></thead>
-                <tbody>
-                  <tr><td>CS/ICTECH/18/02/2026</td><td>ICT Technician</td><td>2026-03-12</td><td><span class="pill">Pending</span></td></tr>
-                  <tr><td>CS/PLATCOM/18/02/2026</td><td>Platoon Commander</td><td>2026-03-12</td><td><span class="pill">Pending</span></td></tr>
-                </tbody>
-              </table>
-            </section>
-
-            <section class="tab-panel" id="tab-personal-form">
-              <div class="grid">
-                <div class="field"><label for="firstName">First Name</label><input id="firstName" /></div>
-                <div class="field"><label for="lastName">Last Name</label><input id="lastName" /></div>
-                <div class="field"><label for="email">Email</label><input id="email" type="email" /></div>
-                <div class="field"><label for="phone">Phone</label><input id="phone" /></div>
-                <div class="field"><label for="idNumber">ID Number</label><input id="idNumber" /></div>
-                <div class="field"><label for="citizenship">Citizenship</label><input id="citizenship" value="South African" /></div>
-                <div class="field full"><label for="address">Address</label><textarea id="address"></textarea></div>
+          <div class="form-wrap">
+            <section class="section-row">
+              <div class="section-label">
+                <h3>Personal Information</h3>
+                <p>Your Name & Contact Information</p>
               </div>
-              <div class="actions"><button class="btn btn-primary" id="savePersonal">Save Personal Details</button></div>
-            </section>
-
-            <section class="tab-panel" id="tab-education">
-              <div class="grid">
-                <div class="field"><label>Highest Qualification</label><input /></div>
-                <div class="field"><label>Institution</label><input /></div>
-                <div class="field"><label>Completion Year</label><input type="number" /></div>
-                <div class="field"><label>Field of Study</label><input /></div>
-                <div class="field full"><label>Professional Registrations</label><textarea></textarea></div>
-              </div>
-            </section>
-
-            <section class="tab-panel" id="tab-experience">
-              <div class="grid">
-                <div class="field"><label>Current Employer</label><input /></div>
-                <div class="field"><label>Current Role</label><input /></div>
-                <div class="field"><label>Years of Experience</label><input type="number" /></div>
-                <div class="field"><label>Notice Period</label><select><option>Immediate</option><option>2 Weeks</option><option>1 Month</option></select></div>
-                <div class="field full"><label>Key Responsibilities</label><textarea></textarea></div>
-              </div>
-            </section>
-
-            <section class="tab-panel" id="tab-documents-tab">
-              <div class="method-switch">
-                <div class="method-card active" data-mode="upload">
-                  <div class="method-title">Upload CV & Auto-Extract</div>
-                  <div class="method-desc">Upload your CV, extract details into fields, review, then submit.</div>
-                </div>
-                <div class="method-card" data-mode="manual">
-                  <div class="method-title">Manual Entry</div>
-                  <div class="method-desc">Type details manually and upload CV as supporting document.</div>
-                </div>
-              </div>
-
-              <div id="uploadArea" class="panel">
+              <div>
                 <div class="field full">
-                  <label for="cvUpload">Upload CV (TXT, PDF, DOCX)</label>
+                  <label>Upload your resume<span class="req">*</span></label>
+                  <div class="upload-row">
+                    <button id="uploadTrigger" type="button">⬆ Upload File</button>
+                    <div class="file-name" id="fileName">No file selected</div>
+                    <div class="remove-file" id="removeFile">🗑</div>
+                  </div>
                   <input id="cvUpload" type="file" accept=".txt,.pdf,.docx,.doc" />
-                  <div class="helper">This demo extracts data from TXT, PDF and DOCX. DOC is upload-only.</div>
                 </div>
-                <div class="actions"><button class="btn btn-secondary" id="extractBtn">Extract Details from CV</button></div>
-                <div class="extract-preview hidden" id="extractPreview">
-                  <h4>Extracted Details</h4>
-                  <ul class="extract-list" id="extractList"></ul>
-                </div>
-              </div>
 
-              <div class="panel">
-                <h3 style="margin-top:0;">Applicant details (editable before submit)</h3>
-                <div class="grid">
-                  <div class="field"><label for="docFirstName">First Name</label><input id="docFirstName" /></div>
-                  <div class="field"><label for="docLastName">Last Name</label><input id="docLastName" /></div>
-                  <div class="field"><label for="docEmail">Email</label><input id="docEmail" type="email" /></div>
-                  <div class="field"><label for="docPhone">Phone</label><input id="docPhone" /></div>
-                  <div class="field"><label for="docId">ID Number</label><input id="docId" /></div>
-                  <div class="field"><label for="docCitizenship">Citizenship</label><input id="docCitizenship" value="South African" /></div>
-                  <div class="field full"><label for="docAddress">Address</label><textarea id="docAddress"></textarea></div>
+                <div class="grid" style="margin-top:18px;">
+                  <div class="field"><label for="firstName">First Name<span class="req">*</span></label><input id="firstName" /></div>
+                  <div class="field"><label for="lastName">Last Name<span class="req">*</span></label><input id="lastName" /></div>
+                  <div class="field"><label for="email">Email<span class="req">*</span></label><input id="email" type="email" /></div>
+                  <div class="field"><label for="phone">Phone<span class="req">*</span></label><input id="phone" /></div>
                 </div>
               </div>
-
-              <div class="field full" id="cvTextWrap">
-                <label for="cvText">Manual CV text input (fallback)</label>
-                <textarea id="cvText" placeholder="If file extraction misses some details, paste CV text and click Extract Details."></textarea>
-              </div>
-
-              <div class="actions">
-                <button class="btn btn-success" id="submitApplicationBtn">Submit Application</button>
-                <button class="btn btn-primary" id="syncToProfileBtn">Save to Personal Details Tab</button>
-              </div>
-              <div class="status" id="statusMsg"></div>
             </section>
-          </section>
 
-          <section class="section" id="section-dashboard"><div class="section-body"><div class="panel"><h3>Welcome to your dashboard</h3><p>This demo keeps the OR Tambo look while improving consistency: left menu works, sections are stable, and CV flow supports manual and extraction options.</p></div></div></section>
-          <section class="section" id="section-personal"><div class="section-body"><div class="panel"><h3>Manage My Profile</h3><p>Profile section linked from the left sidebar now opens correctly.</p></div></div></section>
-          <section class="section" id="section-documents"><div class="section-body"><div class="panel"><h3>My CV</h3><p>Use upload extraction or manual entry, then submit.</p><div class="actions"><button class="btn btn-primary jump-to-documents">Open CV Workflow</button></div></div></div></section>
-          <section class="section" id="section-vacancies-current"><div class="section-body"><div class="panel"><h3>Current Vacancies</h3><p>Demo listing area for current opportunities.</p></div></div></section>
-          <section class="section" id="section-vacancies-archived"><div class="section-body"><div class="panel"><h3>Archived Vacancies</h3><p>Demo listing area for archived opportunities.</p></div></div></section>
-          <section class="section" id="section-how-to-apply"><div class="section-body"><div class="panel"><h3>How to Apply</h3><ul class="clean"><li>Choose manual or CV extraction mode.</li><li>Review extracted details and edit as needed.</li><li>Submit your application with supporting CV.</li></ul></div></div></section>
-          <section class="section" id="section-help-faq"><div class="section-body"><div class="panel"><h3>Frequently Asked Questions</h3><p>Help center section now stays on-page and no longer jumps unexpectedly.</p></div></div></section>
-          <section class="section" id="section-help-videos"><div class="section-body"><div class="panel"><h3>Video Tutorials</h3><p>Placeholder for video tutorials in this demo version.</p></div></div></section>
+            <section class="section-row">
+              <div class="section-label">
+                <h3>Address Information</h3>
+                <p>Your location details</p>
+              </div>
+              <div class="grid">
+                <div class="field"><label for="city">City of Residence<span class="req">*</span></label><input id="city" /></div>
+                <div class="field"><label for="country">Country<span class="req">*</span></label><select id="country"><option value="">Not Selected</option><option>South Africa</option><option>Lesotho</option><option>Namibia</option></select></div>
+                <div class="field full"><label for="address">Full Address</label><textarea id="address"></textarea></div>
+                <div class="field"><label for="postalCode">Postal Code</label><input id="postalCode" /></div>
+              </div>
+            </section>
+
+            <section class="section-row">
+              <div class="section-label">
+                <h3>Professional Profile</h3>
+                <p>Link your profiles</p>
+              </div>
+              <div class="grid">
+                <div class="field"><label for="linkedin">LinkedIn Profile<span class="req">*</span></label><input id="linkedin" placeholder="https://www.linkedin.com/in/your-profile" /></div>
+                <div class="field"><label for="github">Github Profile</label><input id="github" placeholder="https://github.com/your-profile" /></div>
+              </div>
+            </section>
+
+            <div class="section-row" style="grid-template-columns:1fr;">
+              <div>
+                <label class="agree"><input type="checkbox" id="agreeTerms" /> I agree to <u>Candidate Terms</u></label>
+                <div class="actions">
+                  <button class="btn btn-primary" id="extractBtn" type="button">Extract & Autofill</button>
+                  <button class="btn btn-success" id="submitBtn" type="button">Submit Your Application</button>
+                </div>
+                <div class="field full" style="margin-top:12px;">
+                  <label for="cvText">CV text fallback (optional)</label>
+                  <textarea id="cvText" placeholder="If extraction misses details, paste CV text here then click Extract & Autofill."></textarea>
+                </div>
+                <div class="status" id="statusMsg"></div>
+              </div>
+            </div>
+          </div>
         </article>
+
+        <article class="card section" id="section-dashboard"><div class="panel">Dashboard placeholder.</div></article>
+        <article class="card section" id="section-personal"><div class="panel">Manage My Profile placeholder.</div></article>
+        <article class="card section" id="section-applications"><div class="panel">My Applications placeholder.</div></article>
+        <article class="card section" id="section-vacancies-current"><div class="panel">Current Vacancies placeholder.</div></article>
+        <article class="card section" id="section-vacancies-archived"><div class="panel">Archived Vacancies placeholder.</div></article>
       </div>
     </main>
   </div>
 
   <script>
-    const sectionsMeta = {
-      applications: { title: 'My Applications', description: 'Stable multi-step application flow with CV extraction and manual edit support.' },
-      dashboard: { title: 'Dashboard', description: 'Applicant dashboard summary for quick access.' },
-      personal: { title: 'Manage My Profile', description: 'Update and maintain your profile information.' },
-      documents: { title: 'My CV', description: 'Upload CV, extract details, review manually, then submit.' },
-      'vacancies-current': { title: 'Current Vacancies', description: 'Browse vacancies currently open for applications.' },
-      'vacancies-archived': { title: 'Archived Vacancies', description: 'View closed and archived vacancy posts.' },
-      'how-to-apply': { title: 'How to Apply', description: 'Step-by-step application guidance.' },
-      'help-faq': { title: 'Help Center - FAQ', description: 'Answers to common applicant questions.' },
-      'help-videos': { title: 'Help Center - Video Tutorials', description: 'Tutorials for using the recruitment system.' }
-    };
-
-    const pageTitle = document.getElementById('pageTitle');
-    const pageDescription = document.getElementById('pageDescription');
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('.section');
-
-    function openSection(sectionKey) {
-      navLinks.forEach((link) => link.classList.toggle('active', link.dataset.section === sectionKey));
-      sections.forEach((section) => section.classList.toggle('active', section.id === `section-${sectionKey}`));
-      const meta = sectionsMeta[sectionKey] || sectionsMeta.applications;
-      pageTitle.textContent = meta.title;
-      pageDescription.textContent = meta.description;
-    }
-
     navLinks.forEach((link) => {
       link.addEventListener('click', () => {
-        const sectionKey = link.dataset.section;
-        openSection(sectionKey);
-        if (sectionKey === 'documents') {
-          openSection('applications');
-          activateTab('documents-tab');
-        }
+        const key = link.dataset.section;
+        navLinks.forEach((l) => l.classList.toggle('active', l === link));
+        sections.forEach((section) => section.classList.toggle('active', section.id === `section-${key}`));
       });
     });
 
@@ -306,193 +248,151 @@
         document.querySelector(`.menu-group[data-group="${group}"]`).classList.toggle('open');
       });
     });
-    document.querySelector('.menu-group[data-group="administration"]').classList.add('open');
-    document.querySelector('.menu-group[data-group="vacancies"]').classList.add('open');
-    document.querySelector('.menu-group[data-group="help"]').classList.add('open');
-
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabPanels = document.querySelectorAll('.tab-panel');
-    function activateTab(tabKey) {
-      tabButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === tabKey));
-      tabPanels.forEach((panel) => panel.classList.toggle('active', panel.id === `tab-${tabKey}`));
-    }
-    tabButtons.forEach((btn) => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
-
-    document.querySelectorAll('.jump-to-documents').forEach((button) => {
-      button.addEventListener('click', () => {
-        openSection('applications');
-        activateTab('documents-tab');
-      });
-    });
 
     const statusMsg = document.getElementById('statusMsg');
+    const cvUpload = document.getElementById('cvUpload');
+    const fileName = document.getElementById('fileName');
+
     function showStatus(message, type = 'success') {
       statusMsg.textContent = message;
       statusMsg.className = `status show ${type}`;
       clearTimeout(showStatus.timer);
-      showStatus.timer = setTimeout(() => statusMsg.className = 'status', 4500);
+      showStatus.timer = setTimeout(() => statusMsg.className = 'status', 5000);
     }
 
-    const modeCards = document.querySelectorAll('.method-card');
-    const uploadArea = document.getElementById('uploadArea');
-    let currentMode = 'upload';
-    modeCards.forEach((card) => {
-      card.addEventListener('click', () => {
-        currentMode = card.dataset.mode;
-        modeCards.forEach((c) => c.classList.toggle('active', c === card));
-        uploadArea.classList.toggle('hidden', currentMode === 'manual');
-      });
+    document.getElementById('uploadTrigger').addEventListener('click', () => cvUpload.click());
+
+    cvUpload.addEventListener('change', () => {
+      const file = cvUpload.files[0];
+      fileName.textContent = file ? file.name : 'No file selected';
+      if (file) showStatus(`File "${file.name}" selected. Click "Extract & Autofill".`, 'success');
     });
 
-    const profileFields = ['firstName', 'lastName', 'email', 'phone', 'idNumber', 'citizenship', 'address'];
-    const docFields = ['docFirstName', 'docLastName', 'docEmail', 'docPhone', 'docId', 'docCitizenship', 'docAddress'];
-
-    function syncDocToProfile() {
-      profileFields.forEach((field, idx) => {
-        document.getElementById(field).value = document.getElementById(docFields[idx]).value;
-      });
-    }
-
-    function syncProfileToDoc() {
-      profileFields.forEach((field, idx) => {
-        document.getElementById(docFields[idx]).value = document.getElementById(field).value;
-      });
-    }
-    syncProfileToDoc();
-
-    function extractDetailsFromText(text) {
-      const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-      const email = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || '';
-      const phone = text.match(/(?:\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}|\+?\d[\d\s-]{8,}/)?.[0] || '';
-      const idNumber = text.match(/\b\d{13}\b/)?.[0] || '';
-
-      let firstName = '';
-      let lastName = '';
-      const nameTagged = text.match(/(?:name|full\s*name)\s*[:\-]\s*([A-Za-z'-]+)\s+([A-Za-z'-]+)/i);
-      if (nameTagged) {
-        firstName = nameTagged[1];
-        lastName = nameTagged[2];
-      } else if (lines.length) {
-        const firstLineName = lines[0].match(/^([A-Za-z'-]+)\s+([A-Za-z'-]+)$/);
-        if (firstLineName) {
-          firstName = firstLineName[1];
-          lastName = firstLineName[2];
-        }
-      }
-
-      const addressLine = lines.find((line) => /address|street|avenue|road|rd|town|city/i.test(line)) || '';
-      return { firstName, lastName, email, phone, idNumber, address: addressLine, citizenship: 'South African' };
-    }
-
-    function applyExtractedDetails(details) {
-      document.getElementById('docFirstName').value = details.firstName || '';
-      document.getElementById('docLastName').value = details.lastName || '';
-      document.getElementById('docEmail').value = details.email || '';
-      document.getElementById('docPhone').value = details.phone || '';
-      document.getElementById('docId').value = details.idNumber || '';
-      document.getElementById('docAddress').value = details.address || '';
-      if (details.citizenship) document.getElementById('docCitizenship').value = details.citizenship;
-
-      const preview = document.getElementById('extractPreview');
-      const list = document.getElementById('extractList');
-      list.innerHTML = '';
-      Object.entries(details).forEach(([key, value]) => {
-        if (!value) return;
-        const item = document.createElement('li');
-        item.textContent = `${key}: ${value}`;
-        list.appendChild(item);
-      });
-      preview.classList.remove('hidden');
-
-      if (!list.children.length) {
-        showStatus('No details extracted yet. You can fill the form manually.', 'warning');
-      } else {
-        showStatus('Details extracted. Review/edit the fields, then submit.', 'success');
-      }
-    }
+    document.getElementById('removeFile').addEventListener('click', () => {
+      cvUpload.value = '';
+      fileName.textContent = 'No file selected';
+      showStatus('CV file removed.', 'warning');
+    });
 
     async function extractTextFromPdf(file) {
-      if (!window.pdfjsLib) throw new Error('PDF parser unavailable');
+      if (!window.pdfjsLib) throw new Error('PDF parser unavailable in this browser session.');
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
       const bytes = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
       let text = '';
-      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
-        const page = await pdf.getPage(pageNumber);
+      for (let i = 1; i <= pdf.numPages; i += 1) {
+        const page = await pdf.getPage(i);
         const content = await page.getTextContent();
-        text += content.items.map((item) => item.str).join(' ') + '\n';
+        text += `${content.items.map((item) => item.str).join(' ')}\n`;
       }
       return text;
     }
 
     async function extractTextFromDocx(file) {
-      if (!window.mammoth) throw new Error('DOCX parser unavailable');
+      if (!window.mammoth) throw new Error('DOCX parser unavailable in this browser session.');
       const arrayBuffer = await file.arrayBuffer();
       const result = await mammoth.extractRawText({ arrayBuffer });
       return result.value;
     }
 
     async function getCvText(file) {
-      const extension = file.name.split('.').pop().toLowerCase();
-      if (extension === 'txt') return file.text();
-      if (extension === 'pdf') return extractTextFromPdf(file);
-      if (extension === 'docx') return extractTextFromDocx(file);
-      if (extension === 'doc') throw new Error('DOC format cannot be parsed in browser demo. Use manual fields.');
-      throw new Error('Unsupported file type. Upload TXT, PDF or DOCX.');
+      if (!file) return '';
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (ext === 'txt') return file.text();
+      if (ext === 'pdf') return extractTextFromPdf(file);
+      if (ext === 'docx') return extractTextFromDocx(file);
+      if (ext === 'doc') throw new Error('DOC cannot be parsed directly in-browser. Paste CV text in fallback box.');
+      throw new Error('Unsupported file format. Use TXT, PDF, DOCX or paste text manually.');
+    }
+
+    function extractDetails(text) {
+      const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+      const email = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || '';
+      const phone = text.match(/(?:\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}|\+?\d[\d\s-]{8,}/)?.[0] || '';
+      const nameTagged = text.match(/(?:name|full\s*name)\s*[:\-]\s*([A-Za-z'-]+)\s+([A-Za-z'-]+)/i);
+
+      let firstName = '';
+      let lastName = '';
+      if (nameTagged) {
+        firstName = nameTagged[1];
+        lastName = nameTagged[2];
+      } else {
+        const firstLineName = lines.find((line) => /^[A-Za-z'-]+\s+[A-Za-z'-]+$/.test(line));
+        if (firstLineName) {
+          const [first, last] = firstLineName.split(/\s+/, 2);
+          firstName = first;
+          lastName = last;
+        }
+      }
+
+      const address = lines.find((line) => /street|st\b|road|rd\b|avenue|ave|drive|dr\b|address/i.test(line)) || '';
+      const cityTagged = text.match(/(?:city|city\s*of\s*residence)\s*[:\-]\s*([A-Za-z '-]+)/i);
+      const city = cityTagged?.[1]?.trim() || lines.find((line) => /mthatha|umtata|east london|durban|johannesburg|cape town|pretoria|bloemfontein|gqeberha/i.test(line)) || '';
+      const country = /south africa/i.test(text) ? 'South Africa' : '';
+      const postalCode = text.match(/\b\d{4}\b/)?.[0] || '';
+      const linkedin = text.match(/https?:\/\/(www\.)?linkedin\.com\/[^\s]+/i)?.[0] || '';
+      const github = text.match(/https?:\/\/(www\.)?github\.com\/[^\s]+/i)?.[0] || '';
+
+      return { firstName, lastName, email, phone, address, city, country, postalCode, linkedin, github };
+    }
+
+    function applyDetails(details) {
+      document.getElementById('firstName').value = details.firstName || document.getElementById('firstName').value;
+      document.getElementById('lastName').value = details.lastName || document.getElementById('lastName').value;
+      document.getElementById('email').value = details.email || document.getElementById('email').value;
+      document.getElementById('phone').value = details.phone || document.getElementById('phone').value;
+      document.getElementById('address').value = details.address || document.getElementById('address').value;
+      document.getElementById('city').value = details.city || document.getElementById('city').value;
+      document.getElementById('postalCode').value = details.postalCode || document.getElementById('postalCode').value;
+      document.getElementById('linkedin').value = details.linkedin || document.getElementById('linkedin').value;
+      document.getElementById('github').value = details.github || document.getElementById('github').value;
+      if (details.country) document.getElementById('country').value = details.country;
     }
 
     document.getElementById('extractBtn').addEventListener('click', async () => {
-      const file = document.getElementById('cvUpload').files[0];
-      const fallbackText = document.getElementById('cvText').value.trim();
+      const file = cvUpload.files[0];
+      const fallback = document.getElementById('cvText').value.trim();
 
-      if (!file && !fallbackText) {
-        showStatus('Choose a CV file or paste CV text before extracting.', 'warning');
+      if (!file && !fallback) {
+        showStatus('Please upload CV or paste CV text first.', 'warning');
         return;
       }
 
       try {
-        const text = file ? await getCvText(file) : fallbackText;
+        const text = file ? await getCvText(file) : fallback;
         document.getElementById('cvText').value = text;
-        const details = extractDetailsFromText(text);
-        applyExtractedDetails(details);
+        applyDetails(extractDetails(text));
+        showStatus('CV details extracted and form auto-filled. Please review before submit.', 'success');
       } catch (error) {
-        if (fallbackText) {
-          const details = extractDetailsFromText(fallbackText);
-          applyExtractedDetails(details);
-          showStatus(`File extraction issue: ${error.message}. Used pasted text instead.`, 'warning');
+        if (fallback) {
+          applyDetails(extractDetails(fallback));
+          showStatus(`Upload extraction failed: ${error.message} Used pasted text fallback.`, 'warning');
         } else {
           showStatus(error.message, 'error');
         }
       }
     });
 
-    document.getElementById('syncToProfileBtn').addEventListener('click', () => {
-      syncDocToProfile();
-      activateTab('personal-form');
-      showStatus('Details copied to Personal Details tab.', 'success');
-    });
-
-    document.getElementById('savePersonal').addEventListener('click', () => {
-      syncProfileToDoc();
-      showStatus('Personal details saved successfully (demo).', 'success');
-    });
-
-    document.getElementById('submitApplicationBtn').addEventListener('click', () => {
-      const required = ['docFirstName', 'docLastName', 'docEmail', 'docPhone'];
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const required = ['firstName', 'lastName', 'email', 'phone', 'city', 'country', 'linkedin'];
       const missing = required.filter((id) => !document.getElementById(id).value.trim());
-      const uploadedCv = document.getElementById('cvUpload').files[0];
+      const hasFile = !!cvUpload.files[0];
+      const agreed = document.getElementById('agreeTerms').checked;
 
+      if (!hasFile) {
+        showStatus('Please upload your CV before submitting.', 'warning');
+        return;
+      }
       if (missing.length) {
-        showStatus('Please complete First Name, Last Name, Email and Phone before submitting.', 'warning');
+        showStatus('Please complete all required fields before submitting.', 'warning');
         return;
       }
-      if (!uploadedCv) {
-        showStatus('Please upload your CV before submitting the application.', 'warning');
+      if (!agreed) {
+        showStatus('Please agree to Candidate Terms before submitting.', 'warning');
         return;
       }
 
-      syncDocToProfile();
-      showStatus(`Application submitted successfully with CV "${uploadedCv.name}" (demo).`, 'success');
+      showStatus(`Application submitted successfully with CV "${cvUpload.files[0].name}" (demo).`, 'success');
     });
   </script>
 </body>
