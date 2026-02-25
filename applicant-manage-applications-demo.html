@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OR Tambo | Applicant Manage Applications (Demo)</title>
+  <style>
+    :root {
+      --sidebar:#313a44;
+      --sidebar-alt:#3a444f;
+      --primary:#0f7df2;
+      --bg:#f2f4f7;
+      --panel:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --success:#12b76a;
+      --warn:#f4b400;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 290px;
+      background: var(--sidebar);
+      color: #d1d5db;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #2b333c;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px;
+      font-size: 38px;
+      color: #fff;
+      border-bottom: 1px solid #46515d;
+      font-weight: 600;
+    }
+    .search { display: flex; padding: 16px; gap: 6px; }
+    .search input {
+      flex: 1;
+      border: 1px solid #4b5563;
+      background: var(--sidebar-alt);
+      color: #fff;
+      border-radius: 4px;
+      padding: 10px;
+    }
+    .menu { display: grid; gap: 4px; padding: 0 10px; }
+    .menu button {
+      background: transparent;
+      border: 0;
+      color: #d1d5db;
+      text-align: left;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .menu button.active { background: var(--primary); color: #fff; }
+
+    .content { flex: 1; }
+    .topbar {
+      height: 70px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      font-size: 16px;
+    }
+    .badge { background: #1ca34a; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+    .page { padding: 24px 26px 40px; }
+    h1 { margin: 0 0 20px; font-size: 46px; font-weight: 500; }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.03);
+      overflow: hidden;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      background: #f9fafb;
+    }
+    .tab-btn {
+      border: 0;
+      background: transparent;
+      padding: 14px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #374151;
+      border-bottom: 3px solid transparent;
+    }
+    .tab-btn.active { color: #0b5ec0; border-bottom-color: #0b5ec0; background: #fff; }
+
+    .tab-panel { display: none; padding: 20px; }
+    .tab-panel.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .field label { display:block; font-weight:600; margin-bottom: 6px; }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      border: 1px solid #cfd4dc;
+      border-radius: 6px;
+      padding: 11px 12px;
+      font-size: 15px;
+      font-family: inherit;
+    }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .full { grid-column: 1 / -1; }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .btn-primary { background: #0f7df2; color: #fff; }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    .btn-success { background: var(--success); color: #fff; }
+
+    .status {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #065f46;
+      background: #ecfdf3;
+      border: 1px solid #a7f3d0;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+    }
+    .status.show { display: block; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); }
+    th { background: #f9fafb; }
+    .pill { background: var(--warn); border-radius: 4px; padding: 2px 8px; font-weight: 600; font-size: 13px; }
+
+    @media (max-width: 1100px) {
+      .sidebar { width: 220px; }
+      h1 { font-size: 34px; }
+    }
+    @media (max-width: 860px) {
+      .layout { flex-direction: column; }
+      .sidebar { width: 100%; }
+      .grid { grid-template-columns: 1fr; }
+      .page { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">🛡️ OR Tambo</div>
+      <div class="search">
+        <input placeholder="search" />
+      </div>
+      <div class="menu">
+        <button>Dashboard</button>
+        <button>Administration</button>
+        <button>Manage My Profile</button>
+        <button>My CV</button>
+        <button class="active">My Applications</button>
+        <button>Vacancies</button>
+        <button>Help Center</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div>☰</div>
+        <div><span class="badge">Applicant</span> Demo User</div>
+      </div>
+
+      <div class="page">
+        <h1>Applicant Information</h1>
+
+        <section class="card">
+          <nav class="tabs" aria-label="Application tabs">
+            <button class="tab-btn active" data-tab="applications">My Applications</button>
+            <button class="tab-btn" data-tab="personal">Personal Details</button>
+            <button class="tab-btn" data-tab="education">Education</button>
+            <button class="tab-btn" data-tab="experience">Work Experience</button>
+            <button class="tab-btn" data-tab="documents">Documents & CV Upload</button>
+          </nav>
+
+          <section class="tab-panel active" id="applications">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reference Number</th>
+                  <th>Job Title</th>
+                  <th>Closing Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CS/ICTECH/18/02/2026</td>
+                  <td>ICT Technician</td>
+                  <td>2026-03-12</td>
+                  <td><span class="pill">Pending</span></td>
+                </tr>
+                <tr>
+                  <td>CS/PLATCOM/18/02/2026</td>
+                  <td>Platoon Commander</td>
+                  <td>2026-03-12</td>
+                  <td><span class="pill">Pending</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section class="tab-panel" id="personal">
+            <div class="grid">
+              <div class="field"><label>First Name</label><input id="firstName" /></div>
+              <div class="field"><label>Last Name</label><input id="lastName" /></div>
+              <div class="field"><label>Email</label><input id="email" type="email" /></div>
+              <div class="field"><label>Phone</label><input id="phone" /></div>
+              <div class="field full"><label>Address</label><textarea id="address"></textarea></div>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" id="savePersonal">Save Personal Details</button>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="education">
+            <div class="grid">
+              <div class="field"><label>Highest Qualification</label><input /></div>
+              <div class="field"><label>Institution</label><input /></div>
+              <div class="field"><label>Completion Year</label><input type="number" /></div>
+              <div class="field"><label>Professional Registration</label><input /></div>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="experience">
+            <div class="grid">
+              <div class="field"><label>Current Employer</label><input /></div>
+              <div class="field"><label>Current Role</label><input /></div>
+              <div class="field"><label>Years of Experience</label><input type="number" /></div>
+              <div class="field"><label>Notice Period</label>
+                <select><option>Immediate</option><option>2 Weeks</option><option>1 Month</option></select>
+              </div>
+              <div class="field full"><label>Key Responsibilities</label><textarea></textarea></div>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="documents">
+            <div class="grid">
+              <div class="field full">
+                <label>Upload CV (PDF, DOC, DOCX)</label>
+                <input id="cvUpload" type="file" accept=".pdf,.doc,.docx" />
+              </div>
+              <div class="field full">
+                <label>Quick Autofill from CV text (paste extracted text)</label>
+                <textarea id="cvText" placeholder="Paste CV text here to auto-fill Name, Email and Phone..."></textarea>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-success" id="autoFillBtn">Auto-fill Personal Details</button>
+              <button class="btn btn-secondary" id="simulateUploadBtn">Save Documents</button>
+            </div>
+            <div class="status" id="statusMsg"></div>
+          </section>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.tab-panel');
+
+    // Stable in-page tabs: prevents jump/reload between sections.
+    tabButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+
+        tabButtons.forEach((b) => b.classList.remove('active'));
+        panels.forEach((p) => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById(tab).classList.add('active');
+      });
+    });
+
+    const statusMsg = document.getElementById('statusMsg');
+    const showStatus = (msg) => {
+      statusMsg.textContent = msg;
+      statusMsg.classList.add('show');
+      setTimeout(() => statusMsg.classList.remove('show'), 3000);
+    };
+
+    document.getElementById('autoFillBtn').addEventListener('click', () => {
+      const text = document.getElementById('cvText').value;
+
+      const emailMatch = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+      const phoneMatch = text.match(/(\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}/);
+      const nameMatch = text.match(/Name\s*:\s*([A-Za-z]+)\s+([A-Za-z]+)/i);
+
+      if (nameMatch) {
+        document.getElementById('firstName').value = nameMatch[1];
+        document.getElementById('lastName').value = nameMatch[2];
+      }
+      if (emailMatch) document.getElementById('email').value = emailMatch[0];
+      if (phoneMatch) document.getElementById('phone').value = phoneMatch[0];
+
+      showStatus('Personal details auto-filled from CV text. Please review before saving.');
+    });
+
+    document.getElementById('simulateUploadBtn').addEventListener('click', () => {
+      const cvFile = document.getElementById('cvUpload').files[0];
+      if (!cvFile) {
+        showStatus('Please select a CV file before saving.');
+        return;
+      }
+      showStatus(`CV "${cvFile.name}" uploaded successfully (demo).`);
+    });
+
+    document.getElementById('savePersonal').addEventListener('click', () => {
+      showStatus('Personal details saved successfully (demo).');
+    });
+  </script>
+</body>
+</html>
