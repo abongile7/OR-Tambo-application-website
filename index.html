@@ -1,350 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OR Tambo | Applicant Manage Applications (Demo)</title>
-  <style>
-    :root {
-      --sidebar:#313a44;
-      --sidebar-alt:#3a444f;
-      --primary:#0f7df2;
-      --bg:#f2f4f7;
-      --panel:#ffffff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --border:#e5e7eb;
-      --success:#12b76a;
-      --warn:#f4b400;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-    }
-    .layout { display: flex; min-height: 100vh; }
-    .sidebar {
-      width: 290px;
-      background: var(--sidebar);
-      color: #d1d5db;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid #2b333c;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 18px;
-      font-size: 38px;
-      color: #fff;
-      border-bottom: 1px solid #46515d;
-      font-weight: 600;
-    }
-    .search { display: flex; padding: 16px; gap: 6px; }
-    .search input {
-      flex: 1;
-      border: 1px solid #4b5563;
-      background: var(--sidebar-alt);
-      color: #fff;
-      border-radius: 4px;
-      padding: 10px;
-    }
-    .menu { display: grid; gap: 4px; padding: 0 10px; }
-    .menu button {
-      background: transparent;
-      border: 0;
-      color: #d1d5db;
-      text-align: left;
-      padding: 12px;
-      border-radius: 4px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    .menu button.active { background: var(--primary); color: #fff; }
-
-    .content { flex: 1; }
-    .topbar {
-      height: 70px;
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      font-size: 16px;
-    }
-    .badge { background: #1ca34a; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
-    .page { padding: 24px 26px 40px; }
-    h1 { margin: 0 0 20px; font-size: 46px; font-weight: 500; }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      box-shadow: 0 1px 2px rgba(0,0,0,.03);
-      overflow: hidden;
-    }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0;
-      border-bottom: 1px solid var(--border);
-      background: #f9fafb;
-    }
-    .tab-btn {
-      border: 0;
-      background: transparent;
-      padding: 14px 16px;
-      font-size: 16px;
-      cursor: pointer;
-      color: #374151;
-      border-bottom: 3px solid transparent;
-    }
-    .tab-btn.active { color: #0b5ec0; border-bottom-color: #0b5ec0; background: #fff; }
-
-    .tab-panel { display: none; padding: 20px; }
-    .tab-panel.active { display: block; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-    .field label { display:block; font-weight:600; margin-bottom: 6px; }
-    .field input, .field textarea, .field select {
-      width: 100%;
-      border: 1px solid #cfd4dc;
-      border-radius: 6px;
-      padding: 11px 12px;
-      font-size: 15px;
-      font-family: inherit;
-    }
-    .field textarea { min-height: 110px; resize: vertical; }
-    .full { grid-column: 1 / -1; }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      border: 0;
-      border-radius: 6px;
-      padding: 10px 14px;
-      font-size: 15px;
-      cursor: pointer;
-    }
-    .btn-primary { background: #0f7df2; color: #fff; }
-    .btn-secondary { background: #e5e7eb; color: #111827; }
-    .btn-success { background: var(--success); color: #fff; }
-
-    .status {
-      margin-top: 12px;
-      font-size: 14px;
-      color: #065f46;
-      background: #ecfdf3;
-      border: 1px solid #a7f3d0;
-      padding: 10px;
-      border-radius: 6px;
-      display: none;
-    }
-    .status.show { display: block; }
-
-    table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); }
-    th { background: #f9fafb; }
-    .pill { background: var(--warn); border-radius: 4px; padding: 2px 8px; font-weight: 600; font-size: 13px; }
-
-    @media (max-width: 1100px) {
-      .sidebar { width: 220px; }
-      h1 { font-size: 34px; }
-    }
-    @media (max-width: 860px) {
-      .layout { flex-direction: column; }
-      .sidebar { width: 100%; }
-      .grid { grid-template-columns: 1fr; }
-      .page { padding: 16px; }
-    }
-  </style>
-</head>
-<body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="brand">🛡️ OR Tambo</div>
-      <div class="search">
-        <input placeholder="search" />
-      </div>
-      <div class="menu">
-        <button>Dashboard</button>
-        <button>Administration</button>
-        <button>Manage My Profile</button>
-        <button>My CV</button>
-        <button class="active">My Applications</button>
-        <button>Vacancies</button>
-        <button>Help Center</button>
-      </div>
-    </aside>
-
-    <main class="content">
-      <div class="topbar">
-        <div>☰</div>
-        <div><span class="badge">Applicant</span> Demo User</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OR Tambo District Municipality | Website & Careers Portal Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui"] },
+            colors: {
+              municipal: {
+                blue: "#004C97",
+                gold: "#F4B400",
+                navy: "#0a2142"
+              }
+            },
+            boxShadow: {
+              card: "0 10px 30px rgba(15,23,42,.08)"
+            }
+          }
+        }
+      };
+    </script>
+  </head>
+  <body class="bg-slate-50 font-sans text-slate-800 antialiased">
+    <div class="min-h-screen">
+      <div class="bg-municipal-navy px-4 py-2 text-xs text-slate-100">
+        <div class="mx-auto flex max-w-7xl items-center justify-between">
+          <p>Government of South Africa · OR Tambo District Municipality · Mthatha</p>
+          <div class="flex gap-4"><span>Citizen Portal</span><span>Staff Portal</span><span>Careers</span></div>
+        </div>
       </div>
 
-      <div class="page">
-        <h1>Applicant Information</h1>
-
-        <section class="card">
-          <nav class="tabs" aria-label="Application tabs">
-            <button class="tab-btn active" data-tab="applications">My Applications</button>
-            <button class="tab-btn" data-tab="personal">Personal Details</button>
-            <button class="tab-btn" data-tab="education">Education</button>
-            <button class="tab-btn" data-tab="experience">Work Experience</button>
-            <button class="tab-btn" data-tab="documents">Documents & CV Upload</button>
+      <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-6">
+          <div class="flex items-center gap-3">
+            <div class="grid h-11 w-11 place-items-center rounded-xl bg-municipal-blue text-white">🛡️</div>
+            <div>
+              <p class="text-sm font-bold uppercase tracking-wide text-municipal-blue">OR Tambo District Municipality</p>
+              <p class="text-xs text-slate-500">Serving the People of the Eastern Cape</p>
+            </div>
+          </div>
+          <nav class="hidden gap-5 text-sm font-medium md:flex">
+            <a href="#home" class="hover:text-municipal-blue">Home</a>
+            <a href="#services" class="hover:text-municipal-blue">Services</a>
+            <a href="#news" class="hover:text-municipal-blue">News</a>
+            <a href="#documents" class="hover:text-municipal-blue">Documents</a>
+            <a href="#vacancies" class="hover:text-municipal-blue">Vacancies</a>
+            <a href="#careers" class="hover:text-municipal-blue">Careers</a>
+            <a href="#contact" class="hover:text-municipal-blue">Contact</a>
           </nav>
+          <button id="openCandidatePanelBtn" class="rounded-xl bg-municipal-blue px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">Candidate Login</button>
+        </div>
+      </header>
 
-          <section class="tab-panel active" id="applications">
-            <table>
-              <thead>
-                <tr>
-                  <th>Reference Number</th>
-                  <th>Job Title</th>
-                  <th>Closing Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
+      <main>
+        <section id="home" class="bg-gradient-to-br from-white to-blue-50">
+          <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-2 lg:px-6 lg:py-24">
+            <div>
+              <p class="inline-block rounded-full border border-blue-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-widest text-municipal-blue">Official Municipal Platform Demo</p>
+              <h1 class="mt-6 text-4xl font-extrabold leading-tight text-municipal-navy lg:text-6xl">OR Tambo District Municipality</h1>
+              <p class="mt-4 text-lg text-slate-600">A realistic municipal website and Workday-style career portal for Mthatha and surrounding communities.</p>
+              <div class="mt-8 flex flex-wrap gap-3">
+                <a href="#services" class="rounded-xl bg-municipal-blue px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800">Report Service Issue</a>
+                <a href="#vacancies" class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold hover:bg-slate-100">View Job Vacancies</a>
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-card"><p class="text-sm text-slate-500">Open Service Requests</p><p class="mt-2 text-3xl font-bold text-municipal-navy">318</p></article>
+              <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-card"><p class="text-sm text-slate-500">Vacancies Open</p><p class="mt-2 text-3xl font-bold text-municipal-navy">14</p></article>
+              <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-card"><p class="text-sm text-slate-500">Applications This Month</p><p class="mt-2 text-3xl font-bold text-municipal-navy">126</p></article>
+              <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-card"><p class="text-sm text-slate-500">Response SLA</p><p class="mt-2 text-3xl font-bold text-emerald-600">94%</p></article>
+            </div>
+          </div>
+        </section>
+
+        <section id="services" class="mx-auto max-w-7xl px-4 py-14 lg:px-6">
+          <div class="mb-6 flex items-end justify-between"><h2 class="text-2xl font-bold text-municipal-navy">Quick Services</h2><p class="text-sm text-slate-500">Focused on local municipality needs</p></div>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="rounded-2xl border bg-white p-5 shadow-card">💧 Water Services</div>
+            <div class="rounded-2xl border bg-white p-5 shadow-card">⚡ Electricity Faults</div>
+            <div class="rounded-2xl border bg-white p-5 shadow-card">🗑️ Waste Collection</div>
+            <div class="rounded-2xl border bg-white p-5 shadow-card">🛣️ Road Maintenance</div>
+            <div class="rounded-2xl border bg-white p-5 shadow-card">📄 Municipal Documents</div>
+            <div class="rounded-2xl border bg-white p-5 shadow-card">💳 Pay Municipal Bills</div>
+          </div>
+        </section>
+
+        <section id="news" class="bg-white py-14">
+          <div class="mx-auto max-w-7xl px-4 lg:px-6">
+            <h2 class="text-2xl font-bold text-municipal-navy">Latest News</h2>
+            <div class="mt-6 grid gap-4 md:grid-cols-3">
+              <article class="rounded-2xl border p-5 shadow-card"><p class="font-semibold">New Water Infrastructure Project in Mthatha</p><p class="mt-2 text-sm text-slate-500">Published: 2026-03-05</p></article>
+              <article class="rounded-2xl border p-5 shadow-card"><p class="font-semibold">Community Health Program Launch</p><p class="mt-2 text-sm text-slate-500">Published: 2026-03-02</p></article>
+              <article class="rounded-2xl border p-5 shadow-card"><p class="font-semibold">Road Repairs in Port St Johns</p><p class="mt-2 text-sm text-slate-500">Published: 2026-02-28</p></article>
+            </div>
+          </div>
+        </section>
+
+        <section id="documents" class="mx-auto max-w-7xl px-4 py-14 lg:px-6">
+          <h2 class="text-2xl font-bold text-municipal-navy">Documents & Resources</h2>
+          <div class="mt-6 overflow-hidden rounded-2xl border bg-white shadow-card">
+            <table class="w-full text-sm">
+              <thead class="bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th class="px-4 py-3">Document</th><th class="px-4 py-3">Category</th><th class="px-4 py-3">Action</th></tr></thead>
               <tbody>
-                <tr>
-                  <td>CS/ICTECH/18/02/2026</td>
-                  <td>ICT Technician</td>
-                  <td>2026-03-12</td>
-                  <td><span class="pill">Pending</span></td>
-                </tr>
-                <tr>
-                  <td>CS/PLATCOM/18/02/2026</td>
-                  <td>Platoon Commander</td>
-                  <td>2026-03-12</td>
-                  <td><span class="pill">Pending</span></td>
-                </tr>
+                <tr class="border-t"><td class="px-4 py-3">Municipal Budget 2026</td><td class="px-4 py-3">Budget Reports</td><td class="px-4 py-3"><a class="text-municipal-blue" href="#">Download</a></td></tr>
+                <tr class="border-t"><td class="px-4 py-3">Integrated Development Plan</td><td class="px-4 py-3">IDP</td><td class="px-4 py-3"><a class="text-municipal-blue" href="#">Download</a></td></tr>
+                <tr class="border-t"><td class="px-4 py-3">Municipal By-laws</td><td class="px-4 py-3">By-laws</td><td class="px-4 py-3"><a class="text-municipal-blue" href="#">Download</a></td></tr>
               </tbody>
             </table>
-          </section>
-
-          <section class="tab-panel" id="personal">
-            <div class="grid">
-              <div class="field"><label>First Name</label><input id="firstName" /></div>
-              <div class="field"><label>Last Name</label><input id="lastName" /></div>
-              <div class="field"><label>Email</label><input id="email" type="email" /></div>
-              <div class="field"><label>Phone</label><input id="phone" /></div>
-              <div class="field full"><label>Address</label><textarea id="address"></textarea></div>
-            </div>
-            <div class="actions">
-              <button class="btn btn-primary" id="savePersonal">Save Personal Details</button>
-            </div>
-          </section>
-
-          <section class="tab-panel" id="education">
-            <div class="grid">
-              <div class="field"><label>Highest Qualification</label><input /></div>
-              <div class="field"><label>Institution</label><input /></div>
-              <div class="field"><label>Completion Year</label><input type="number" /></div>
-              <div class="field"><label>Professional Registration</label><input /></div>
-            </div>
-          </section>
-
-          <section class="tab-panel" id="experience">
-            <div class="grid">
-              <div class="field"><label>Current Employer</label><input /></div>
-              <div class="field"><label>Current Role</label><input /></div>
-              <div class="field"><label>Years of Experience</label><input type="number" /></div>
-              <div class="field"><label>Notice Period</label>
-                <select><option>Immediate</option><option>2 Weeks</option><option>1 Month</option></select>
-              </div>
-              <div class="field full"><label>Key Responsibilities</label><textarea></textarea></div>
-            </div>
-          </section>
-
-          <section class="tab-panel" id="documents">
-            <div class="grid">
-              <div class="field full">
-                <label>Upload CV (PDF, DOC, DOCX)</label>
-                <input id="cvUpload" type="file" accept=".pdf,.doc,.docx" />
-              </div>
-              <div class="field full">
-                <label>Quick Autofill from CV text (paste extracted text)</label>
-                <textarea id="cvText" placeholder="Paste CV text here to auto-fill Name, Email and Phone..."></textarea>
-              </div>
-            </div>
-
-            <div class="actions">
-              <button class="btn btn-success" id="autoFillBtn">Auto-fill Personal Details</button>
-              <button class="btn btn-secondary" id="simulateUploadBtn">Save Documents</button>
-            </div>
-            <div class="status" id="statusMsg"></div>
-          </section>
+          </div>
         </section>
+
+        <section id="vacancies" class="bg-white py-14">
+          <div class="mx-auto max-w-7xl px-4 lg:px-6">
+            <div class="mb-6 flex flex-wrap items-end justify-between gap-3"><h2 class="text-2xl font-bold text-municipal-navy">Vacancies</h2><a href="#careers" class="rounded-xl border px-4 py-2 text-sm font-semibold hover:bg-slate-100">Open Career Portal</a></div>
+            <div id="jobsList" class="grid gap-4 md:grid-cols-2"></div>
+          </div>
+        </section>
+
+        <section id="careers" class="mx-auto max-w-7xl px-4 py-14 lg:px-6">
+          <div class="rounded-3xl border bg-white p-6 shadow-card">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <h2 class="text-2xl font-bold text-municipal-navy">Careers Portal (Workday-style Demo)</h2>
+              <span id="authState" class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">Not logged in</span>
+            </div>
+
+            <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr]">
+              <div class="space-y-4">
+                <h3 class="text-lg font-semibold">Candidate Profile</h3>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <input id="firstName" class="rounded-xl border px-3 py-2.5" placeholder="First Name" />
+                  <input id="lastName" class="rounded-xl border px-3 py-2.5" placeholder="Last Name" />
+                  <input id="email" class="rounded-xl border px-3 py-2.5" placeholder="Email" type="email" />
+                  <input id="phone" class="rounded-xl border px-3 py-2.5" placeholder="Phone" />
+                  <input id="education" class="rounded-xl border px-3 py-2.5 sm:col-span-2" placeholder="Education" />
+                  <input id="skills" class="rounded-xl border px-3 py-2.5 sm:col-span-2" placeholder="Skills (comma separated)" />
+                </div>
+                <label class="block text-sm font-medium text-slate-600">Upload CV text (for auto-fill)</label>
+                <textarea id="cvText" class="min-h-28 w-full rounded-xl border px-3 py-2.5" placeholder="Paste CV text here..."></textarea>
+                <div class="flex flex-wrap gap-2">
+                  <button id="autofillBtn" class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700">Auto-fill from CV</button>
+                  <button id="saveProfileBtn" class="rounded-xl bg-municipal-blue px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">Save Profile</button>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <h3 class="text-lg font-semibold">LinkedIn-style Job Search</h3>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <input id="jobSearch" class="rounded-xl border px-3 py-2.5 sm:col-span-2" placeholder="Search jobs..." />
+                  <select id="departmentFilter" class="rounded-xl border px-3 py-2.5"><option value="all">All Departments</option><option>Infrastructure</option><option>Community Services</option><option>ICT</option><option>Water & Sanitation</option></select>
+                  <select id="locationFilter" class="rounded-xl border px-3 py-2.5"><option value="all">All Locations</option><option>Mthatha</option><option>Port St Johns</option><option>Libode</option></select>
+                </div>
+                <div id="careerJobs" class="space-y-3"></div>
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <h3 class="text-lg font-semibold">My Applications</h3>
+              <div class="mt-3 overflow-hidden rounded-xl border">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th class="px-3 py-2">Job</th><th class="px-3 py-2">Status</th><th class="px-3 py-2">AI Match Score</th><th class="px-3 py-2">Applied At</th></tr></thead>
+                  <tbody id="applicationsTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="contact" class="bg-municipal-navy py-14 text-white">
+          <div class="mx-auto grid max-w-7xl gap-6 px-4 lg:grid-cols-2 lg:px-6">
+            <div>
+              <h2 class="text-2xl font-bold">Contact Municipality</h2>
+              <p class="mt-3 text-sm text-blue-100">OR Tambo House, Nelson Mandela Drive, Myezo Park, Mthatha</p>
+              <p class="mt-1 text-sm text-blue-100">Tel: +27 47 501 0000 · Email: info@ortambo.gov.za</p>
+            </div>
+            <div class="grid h-44 place-items-center rounded-2xl bg-white/10 text-sm text-blue-50">Map placeholder: Mthatha Municipal Region</div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="candidateModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4">
+      <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-card">
+        <div class="mb-4 flex items-center justify-between"><h3 class="font-bold text-municipal-navy">Candidate Login/Register</h3><button id="closeCandidatePanelBtn">✕</button></div>
+        <input id="candidateName" class="mb-3 w-full rounded-xl border px-3 py-2.5" placeholder="Full Name" />
+        <input id="candidateEmail" class="mb-3 w-full rounded-xl border px-3 py-2.5" placeholder="Email" type="email" />
+        <button id="loginBtn" class="w-full rounded-xl bg-municipal-blue px-4 py-2.5 text-sm font-semibold text-white">Continue</button>
       </div>
-    </main>
-  </div>
+    </div>
 
-  <script>
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const panels = document.querySelectorAll('.tab-panel');
+    <div id="toast" class="pointer-events-none fixed right-4 top-20 z-[60] rounded-xl border border-emerald-200 bg-white px-4 py-3 text-sm font-medium text-emerald-700 opacity-0 shadow-card transition">Saved</div>
 
-    // Stable in-page tabs: prevents jump/reload between sections.
-    tabButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const tab = btn.dataset.tab;
+    <script>
+      const jobs = [
+        { id: 1, title: "Civil Engineer", department: "Infrastructure", location: "Mthatha", salary: "R480k - R620k", closingDate: "2026-04-22" },
+        { id: 2, title: "Community Development Officer", department: "Community Services", location: "Mthatha", salary: "R320k - R420k", closingDate: "2026-04-18" },
+        { id: 3, title: "IT Support Technician", department: "ICT", location: "Port St Johns", salary: "R280k - R360k", closingDate: "2026-04-14" },
+        { id: 4, title: "Water Infrastructure Technician", department: "Water & Sanitation", location: "Libode", salary: "R300k - R390k", closingDate: "2026-04-17" }
+      ];
 
-        tabButtons.forEach((b) => b.classList.remove('active'));
-        panels.forEach((p) => p.classList.remove('active'));
+      const state = {
+        candidate: JSON.parse(localStorage.getItem("candidate") || "null"),
+        profile: JSON.parse(localStorage.getItem("candidateProfile") || "{}"),
+        applications: JSON.parse(localStorage.getItem("applications") || "[]")
+      };
 
-        btn.classList.add('active');
-        document.getElementById(tab).classList.add('active');
+      function toast(message) {
+        const el = document.getElementById("toast");
+        el.textContent = message;
+        el.classList.remove("opacity-0");
+        setTimeout(() => el.classList.add("opacity-0"), 2200);
+      }
+
+      function updateAuthState() {
+        document.getElementById("authState").textContent = state.candidate ? `Logged in: ${state.candidate.name}` : "Not logged in";
+      }
+
+      function saveState() {
+        localStorage.setItem("candidate", JSON.stringify(state.candidate));
+        localStorage.setItem("candidateProfile", JSON.stringify(state.profile));
+        localStorage.setItem("applications", JSON.stringify(state.applications));
+      }
+
+      function calcScore(job, skillsText, educationText) {
+        let score = 45;
+        const content = `${skillsText} ${educationText}`.toLowerCase();
+        if (job.department.includes("ICT") && content.includes("it")) score += 25;
+        if (job.department.includes("Water") && content.includes("water")) score += 25;
+        if (job.department.includes("Infrastructure") && (content.includes("civil") || content.includes("engineering"))) score += 30;
+        if (content.includes("community")) score += 15;
+        return Math.min(score, 98);
+      }
+
+      function renderJobs(targetId, withApply = false) {
+        const search = (document.getElementById("jobSearch")?.value || "").toLowerCase();
+        const department = document.getElementById("departmentFilter")?.value || "all";
+        const location = document.getElementById("locationFilter")?.value || "all";
+        const container = document.getElementById(targetId);
+        container.innerHTML = "";
+
+        jobs
+          .filter(j => (j.title + j.department).toLowerCase().includes(search))
+          .filter(j => department === "all" || j.department === department)
+          .filter(j => location === "all" || j.location === location)
+          .forEach(job => {
+            const card = document.createElement("article");
+            card.className = "rounded-xl border border-slate-200 bg-white p-4";
+            card.innerHTML = `<h4 class="font-semibold text-municipal-navy">${job.title}</h4>
+              <p class="mt-1 text-xs text-slate-500">${job.department} · ${job.location} · ${job.salary}</p>
+              <p class="mt-2 text-xs text-slate-500">Closing: ${job.closingDate}</p>
+              ${withApply ? `<button data-job-id="${job.id}" class="applyBtn mt-3 rounded-lg bg-municipal-blue px-3 py-1.5 text-xs font-semibold text-white">Apply</button>` : ""}`;
+            container.appendChild(card);
+          });
+      }
+
+      function renderApplications() {
+        const table = document.getElementById("applicationsTable");
+        table.innerHTML = state.applications.length
+          ? state.applications.map(a => `<tr class="border-t"><td class="px-3 py-2">${a.jobTitle}</td><td class="px-3 py-2">${a.status}</td><td class="px-3 py-2">${a.score}%</td><td class="px-3 py-2">${a.appliedAt}</td></tr>`).join("")
+          : '<tr class="border-t"><td colspan="4" class="px-3 py-3 text-slate-500">No applications submitted yet.</td></tr>';
+      }
+
+      function hydrateProfile() {
+        ["firstName", "lastName", "email", "phone", "education", "skills"].forEach(id => {
+          document.getElementById(id).value = state.profile[id] || "";
+        });
+      }
+
+      document.getElementById("openCandidatePanelBtn").addEventListener("click", () => document.getElementById("candidateModal").classList.replace("hidden", "flex"));
+      document.getElementById("closeCandidatePanelBtn").addEventListener("click", () => document.getElementById("candidateModal").classList.replace("flex", "hidden"));
+
+      document.getElementById("loginBtn").addEventListener("click", () => {
+        const name = document.getElementById("candidateName").value.trim();
+        const email = document.getElementById("candidateEmail").value.trim();
+        if (!name || !email) return toast("Enter name and email to continue.");
+        state.candidate = { name, email };
+        if (!state.profile.email) state.profile.email = email;
+        saveState();
+        updateAuthState();
+        hydrateProfile();
+        document.getElementById("candidateModal").classList.replace("flex", "hidden");
+        toast("Candidate session ready.");
       });
-    });
 
-    const statusMsg = document.getElementById('statusMsg');
-    const showStatus = (msg) => {
-      statusMsg.textContent = msg;
-      statusMsg.classList.add('show');
-      setTimeout(() => statusMsg.classList.remove('show'), 3000);
-    };
+      document.getElementById("autofillBtn").addEventListener("click", () => {
+        const text = document.getElementById("cvText").value;
+        const name = text.match(/name\s*:\s*([a-z]+)\s+([a-z]+)/i);
+        const email = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+        const phone = text.match(/(\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}/);
+        const edu = text.match(/(bachelor|diploma|degree|national diploma|honours)[^\n]*/i);
+        const skills = text.match(/skills\s*:\s*([^\n]+)/i);
 
-    document.getElementById('autoFillBtn').addEventListener('click', () => {
-      const text = document.getElementById('cvText').value;
+        if (name) {
+          document.getElementById("firstName").value = name[1][0].toUpperCase() + name[1].slice(1);
+          document.getElementById("lastName").value = name[2][0].toUpperCase() + name[2].slice(1);
+        }
+        if (email) document.getElementById("email").value = email[0];
+        if (phone) document.getElementById("phone").value = phone[0];
+        if (edu) document.getElementById("education").value = edu[0];
+        if (skills) document.getElementById("skills").value = skills[1];
+        toast("Profile fields auto-filled from CV text.");
+      });
 
-      const emailMatch = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-      const phoneMatch = text.match(/(\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}/);
-      const nameMatch = text.match(/Name\s*:\s*([A-Za-z]+)\s+([A-Za-z]+)/i);
+      document.getElementById("saveProfileBtn").addEventListener("click", () => {
+        ["firstName", "lastName", "email", "phone", "education", "skills"].forEach(id => state.profile[id] = document.getElementById(id).value.trim());
+        saveState();
+        toast("Candidate profile saved.");
+      });
 
-      if (nameMatch) {
-        document.getElementById('firstName').value = nameMatch[1];
-        document.getElementById('lastName').value = nameMatch[2];
-      }
-      if (emailMatch) document.getElementById('email').value = emailMatch[0];
-      if (phoneMatch) document.getElementById('phone').value = phoneMatch[0];
+      document.getElementById("careerJobs").addEventListener("click", e => {
+        const btn = e.target.closest(".applyBtn");
+        if (!btn) return;
+        if (!state.candidate) return toast("Login first to apply for jobs.");
 
-      showStatus('Personal details auto-filled from CV text. Please review before saving.');
-    });
+        const job = jobs.find(j => j.id === Number(btn.dataset.jobId));
+        const score = calcScore(job, document.getElementById("skills").value, document.getElementById("education").value);
+        state.applications.unshift({
+          jobId: job.id,
+          jobTitle: job.title,
+          status: "Applied",
+          score,
+          appliedAt: new Date().toISOString().split("T")[0]
+        });
+        saveState();
+        renderApplications();
+        toast(`Application submitted for ${job.title}.`);
+      });
 
-    document.getElementById('simulateUploadBtn').addEventListener('click', () => {
-      const cvFile = document.getElementById('cvUpload').files[0];
-      if (!cvFile) {
-        showStatus('Please select a CV file before saving.');
-        return;
-      }
-      showStatus(`CV "${cvFile.name}" uploaded successfully (demo).`);
-    });
+      ["jobSearch", "departmentFilter", "locationFilter"].forEach(id => {
+        document.getElementById(id).addEventListener("input", () => renderJobs("careerJobs", true));
+        document.getElementById(id).addEventListener("change", () => renderJobs("careerJobs", true));
+      });
 
-    document.getElementById('savePersonal').addEventListener('click', () => {
-      showStatus('Personal details saved successfully (demo).');
-    });
-  </script>
-</body>
+      renderJobs("jobsList", false);
+      renderJobs("careerJobs", true);
+      renderApplications();
+      updateAuthState();
+      hydrateProfile();
+    </script>
+  </body>
 </html>
