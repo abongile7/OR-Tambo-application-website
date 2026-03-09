@@ -127,8 +127,15 @@
         <section id="careers" class="mx-auto max-w-7xl px-4 py-14 lg:px-6">
           <div class="rounded-3xl border bg-white p-6 shadow-card">
             <div class="flex flex-wrap items-center justify-between gap-3">
-              <h2 class="text-2xl font-bold text-municipal-navy">Careers Portal (Workday-style Demo)</h2>
+              <h2 class="text-2xl font-bold text-municipal-navy">Workday-Inspired Careers Workspace</h2>
               <span id="authState" class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">Not logged in</span>
+            </div>
+
+            <div class="mt-6 grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm sm:grid-cols-4">
+              <div class="rounded-xl bg-white px-3 py-2"><span class="font-semibold text-municipal-navy">1. Sign In</span><p class="text-xs text-slate-500">Create candidate session</p></div>
+              <div class="rounded-xl bg-white px-3 py-2"><span class="font-semibold text-municipal-navy">2. Profile</span><p class="text-xs text-slate-500">Complete profile + CV</p></div>
+              <div class="rounded-xl bg-white px-3 py-2"><span class="font-semibold text-municipal-navy">3. Apply</span><p class="text-xs text-slate-500">Submit to shortlisted roles</p></div>
+              <div class="rounded-xl bg-white px-3 py-2"><span class="font-semibold text-municipal-navy">4. Track</span><p class="text-xs text-slate-500">Monitor application status</p></div>
             </div>
 
             <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr]">
@@ -205,8 +212,14 @@
         { id: 4, title: "Water Infrastructure Technician", department: "Water & Sanitation", location: "Libode", salary: "R300k - R390k", closingDate: "2026-04-17" }
       ];
 
+      function normalizeEmail(rawEmail) {
+        return (rawEmail || "").trim().toLowerCase();
+      }
+
       function normalizeCandidateKey(rawEmail) {
-        return (rawEmail || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
+        const normalizedEmail = normalizeEmail(rawEmail);
+        if (!normalizedEmail) return "unknown";
+        return btoa(unescape(encodeURIComponent(normalizedEmail))).replace(/=+$/g, "");
       }
 
       function getProfileKey(email) {
@@ -228,19 +241,29 @@
       function migrateLegacyCandidateData(candidate) {
         if (!candidate?.email) return;
 
+        const normalizedCandidateEmail = normalizeEmail(candidate.email);
         const scopedProfileKey = getProfileKey(candidate.email);
         const scopedApplicationsKey = getApplicationsKey(candidate.email);
+        const migrationMarkerKey = `migrationDone:${normalizeCandidateKey(candidate.email)}`;
 
-        const legacyProfile = localStorage.getItem("candidateProfile");
-        const legacyApplications = localStorage.getItem("applications");
+        if (localStorage.getItem(migrationMarkerKey)) return;
 
-        if (legacyProfile && !localStorage.getItem(scopedProfileKey)) {
-          localStorage.setItem(scopedProfileKey, legacyProfile);
+        const legacyProfileRaw = localStorage.getItem("candidateProfile");
+        const legacyApplicationsRaw = localStorage.getItem("applications");
+        const legacyProfile = parseStoredJSON(legacyProfileRaw || "{}", {});
+
+        const profileEmail = normalizeEmail(legacyProfile?.email);
+        const canMigrateLegacy = profileEmail && profileEmail === normalizedCandidateEmail;
+
+        if (canMigrateLegacy && legacyProfileRaw && !localStorage.getItem(scopedProfileKey)) {
+          localStorage.setItem(scopedProfileKey, legacyProfileRaw);
         }
 
-        if (legacyApplications && !localStorage.getItem(scopedApplicationsKey)) {
-          localStorage.setItem(scopedApplicationsKey, legacyApplications);
+        if (canMigrateLegacy && legacyApplicationsRaw && !localStorage.getItem(scopedApplicationsKey)) {
+          localStorage.setItem(scopedApplicationsKey, legacyApplicationsRaw);
         }
+
+        localStorage.setItem(migrationMarkerKey, "1");
       }
 
       function loadCandidateScopedData(candidate) {
@@ -340,7 +363,7 @@
         const previousEmail = state.candidate?.email;
         state.candidate = { name, email };
 
-        if (!previousEmail || normalizeCandidateKey(previousEmail) !== normalizeCandidateKey(email)) {
+        if (!previousEmail || normalizeEmail(previousEmail) !== normalizeEmail(email)) {
           const candidateScopedData = loadCandidateScopedData(state.candidate);
           state.profile = candidateScopedData.profile;
           state.applications = candidateScopedData.applications;
