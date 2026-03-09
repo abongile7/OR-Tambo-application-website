@@ -217,18 +217,46 @@
         return `applications:${normalizeCandidateKey(email)}`;
       }
 
+      function parseStoredJSON(value, fallback) {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return fallback;
+        }
+      }
+
+      function migrateLegacyCandidateData(candidate) {
+        if (!candidate?.email) return;
+
+        const scopedProfileKey = getProfileKey(candidate.email);
+        const scopedApplicationsKey = getApplicationsKey(candidate.email);
+
+        const legacyProfile = localStorage.getItem("candidateProfile");
+        const legacyApplications = localStorage.getItem("applications");
+
+        if (legacyProfile && !localStorage.getItem(scopedProfileKey)) {
+          localStorage.setItem(scopedProfileKey, legacyProfile);
+        }
+
+        if (legacyApplications && !localStorage.getItem(scopedApplicationsKey)) {
+          localStorage.setItem(scopedApplicationsKey, legacyApplications);
+        }
+      }
+
       function loadCandidateScopedData(candidate) {
         if (!candidate?.email) {
           return { profile: {}, applications: [] };
         }
 
+        migrateLegacyCandidateData(candidate);
+
         return {
-          profile: JSON.parse(localStorage.getItem(getProfileKey(candidate.email)) || "{}"),
-          applications: JSON.parse(localStorage.getItem(getApplicationsKey(candidate.email)) || "[]")
+          profile: parseStoredJSON(localStorage.getItem(getProfileKey(candidate.email)) || "{}", {}),
+          applications: parseStoredJSON(localStorage.getItem(getApplicationsKey(candidate.email)) || "[]", [])
         };
       }
 
-      const savedCandidate = JSON.parse(localStorage.getItem("candidate") || "null");
+      const savedCandidate = parseStoredJSON(localStorage.getItem("candidate") || "null", null);
       const scopedData = loadCandidateScopedData(savedCandidate);
 
       const state = {
