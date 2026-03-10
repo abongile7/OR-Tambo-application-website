@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Details | Enoch Mgijima Smart Recruitment Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-50 font-sans text-slate-800">
+    <main class="mx-auto max-w-5xl px-4 py-10">
+      <a href="jobs.html" class="text-sm font-semibold text-blue-700">← Back to vacancies</a>
+      <section id="jobDetail" class="mt-4 rounded-2xl border bg-white p-6 shadow-sm"></section>
+    </main>
+
+    <script src="js/jobs-data.js"></script>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const jobs = window.JOBS_DATA || [];
+      const job = jobs.find(item => item.id === id) || jobs[0];
+
+      const el = document.getElementById('jobDetail');
+      el.innerHTML = `
+        <p class="text-xs font-semibold uppercase tracking-wide text-blue-700">${job.id}</p>
+        <h1 class="mt-2 text-3xl font-extrabold text-slate-900">${job.title}</h1>
+        <p class="mt-2 text-sm text-slate-600">Enoch Mgijima Local Municipality · ${job.department}</p>
+        <div class="mt-4 grid gap-2 text-sm text-slate-700 sm:grid-cols-2">
+          <p><span class="font-semibold">Location:</span> ${job.location}</p>
+          <p><span class="font-semibold">Job Type:</span> ${job.jobType}</p>
+          <p><span class="font-semibold">Salary:</span> ${job.salary}</p>
+          <p><span class="font-semibold">Closing Date:</span> ${job.closingDate}</p>
+        </div>
+
+        <h2 class="mt-8 text-lg font-bold">Job Description</h2>
+        <p class="mt-2 text-slate-700">${job.description}</p>
+
+        <h2 class="mt-6 text-lg font-bold">Responsibilities</h2>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-slate-700">${job.responsibilities.map(item => `<li>${item}</li>`).join('')}</ul>
+
+        <h2 class="mt-6 text-lg font-bold">Minimum Requirements</h2>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-slate-700">${job.requirements.map(item => `<li>${item}</li>`).join('')}</ul>
+
+        <div class="mt-8">
+          <a href="apply.html?id=${encodeURIComponent(job.id)}" class="rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white">Apply for this role</a>
+        </div>`;
+    </script>
+  </body>
+</html>

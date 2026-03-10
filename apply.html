@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apply | Enoch Mgijima Smart Recruitment Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-50 font-sans text-slate-800">
+    <main class="mx-auto max-w-4xl px-4 py-10">
+      <a href="jobs.html" class="text-sm font-semibold text-blue-700">← Back to vacancies</a>
+      <section class="mt-4 rounded-2xl border bg-white p-6 shadow-sm">
+        <h1 class="text-2xl font-bold text-slate-900">Workday-Style Application Form</h1>
+        <p id="jobTitle" class="mt-1 text-sm text-slate-500">Applying for: General Vacancy</p>
+
+        <form id="applicationForm" class="mt-6 grid gap-4 sm:grid-cols-2">
+          <input id="fullName" required class="rounded-xl border px-3 py-2.5" placeholder="Full Name" />
+          <input id="email" required type="email" class="rounded-xl border px-3 py-2.5" placeholder="Email" />
+          <input id="phone" required class="rounded-xl border px-3 py-2.5" placeholder="Phone" />
+          <input id="address" class="rounded-xl border px-3 py-2.5" placeholder="Address" />
+          <input id="education" class="rounded-xl border px-3 py-2.5 sm:col-span-2" placeholder="Education" />
+          <textarea id="experience" class="min-h-24 rounded-xl border px-3 py-2.5 sm:col-span-2" placeholder="Work Experience"></textarea>
+          <input id="skills" class="rounded-xl border px-3 py-2.5 sm:col-span-2" placeholder="Skills (comma separated)" />
+
+          <label class="sm:col-span-2 text-sm font-medium text-slate-600">Upload CV (text parsing demo)</label>
+          <textarea id="cvText" class="min-h-28 rounded-xl border px-3 py-2.5 sm:col-span-2" placeholder="Paste CV text e.g. Name: Jane Doe, Email: jane@demo.com, Phone: 081 234 5678, Skills: project management, excel"></textarea>
+          <button type="button" id="autofillBtn" class="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white sm:col-span-2">Auto-fill from CV</button>
+
+          <label class="sm:col-span-2 text-sm font-medium text-slate-600">Cover Letter</label>
+          <textarea id="coverLetter" class="min-h-24 rounded-xl border px-3 py-2.5 sm:col-span-2" placeholder="Write your cover letter"></textarea>
+
+          <button class="rounded-xl bg-blue-700 px-4 py-3 text-sm font-semibold text-white sm:col-span-2">Submit Application</button>
+        </form>
+
+        <p id="submitStatus" class="mt-4 hidden rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700"></p>
+      </section>
+    </main>
+
+    <script src="js/jobs-data.js"></script>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const jobs = window.JOBS_DATA || [];
+      const job = jobs.find(item => item.id === id);
+      if (job) {
+        document.getElementById('jobTitle').textContent = `Applying for: ${job.title} (${job.id})`;
+      }
+
+      const autofillBtn = document.getElementById('autofillBtn');
+      const status = document.getElementById('submitStatus');
+      const form = document.getElementById('applicationForm');
+
+      autofillBtn.addEventListener('click', () => {
+        const text = document.getElementById('cvText').value;
+        const name = text.match(/name\s*:\s*([a-z]+\s+[a-z]+)/i);
+        const email = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+        const phone = text.match(/(\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}/);
+        const skills = text.match(/skills\s*:\s*([^\n]+)/i);
+        const education = text.match(/(degree|diploma|certificate|honours)[^\n]*/i);
+
+        if (name) document.getElementById('fullName').value = name[1].replace(/\b\w/g, c => c.toUpperCase());
+        if (email) document.getElementById('email').value = email[0];
+        if (phone) document.getElementById('phone').value = phone[0];
+        if (skills) document.getElementById('skills').value = skills[1];
+        if (education) document.getElementById('education').value = education[0];
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const applications = JSON.parse(localStorage.getItem('emlmApplications') || '[]');
+        applications.unshift({
+          jobId: job?.id || 'General',
+          jobTitle: job?.title || 'General Vacancy',
+          fullName: document.getElementById('fullName').value,
+          email: document.getElementById('email').value,
+          status: 'Applied',
+          appliedAt: new Date().toISOString().split('T')[0]
+        });
+        localStorage.setItem('emlmApplications', JSON.stringify(applications));
+
+        status.textContent = 'Application successfully submitted.';
+        status.classList.remove('hidden');
+        form.reset();
+      });
+    </script>
+  </body>
+</html>
